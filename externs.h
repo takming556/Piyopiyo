@@ -3,12 +3,12 @@
 
 //プロトタイプ宣言
 //class Cell;
-enum CellState;
+enum State;
 enum GameScene;
 
 //extern宣言
 //extern void LoadAllGraph();
-extern enum CellState GetCellStateFromNumber(int Number);
+//extern enum State GetCellStateFromNumber(int Number);
 
 extern enum GameScene gamescene;              //現在のゲームシーンが格納される
 //extern Cell Field[FIELD_WIDTH][FIELD_HEIGHT]; //現在のゲーム盤面が格納される
@@ -27,7 +27,7 @@ extern bool KeyPushFlag_Enter;
 //状態を表すフラグたち
 extern bool NowVanishingFlag;
 
-////グラフィックハンドルたち
+//グラフィックハンドルたち
 //extern int hImg_title;
 //extern int hImg_background;
 //extern int hImg_field;

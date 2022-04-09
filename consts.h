@@ -6,7 +6,7 @@
 //enum CellState;
 
 //定数たち
-const bool DebugFlag = false;                   //TRUEにすると「空」「外」などの表示がされる
+const bool DebugFlag = true;                   //TRUEにすると「空」「外」などの表示がされる
 const bool AutoPiyoFallFlag = true;             //FALSEにするとぴよは手動でのみ落下するようになる
 
 const unsigned int RES_SCR_X = 1024;      //画面解像度X
@@ -37,7 +37,7 @@ const int OFFSET_NEXTFRAME_POS_PXL_Y = 0;
 const unsigned int INITIAL_PIYO_POS_CEL_X = 3;  //ぴよPieceの初期セル位置X座標
 const unsigned int INITIAL_PIYO_POS_CEL_Y = 1;  //ぴよPieceの初期セル位置Y座標
 
-const enum CellState initFieldState[FIELD_WIDTH][FIELD_HEIGHT] = {
+const enum State initFieldState[FIELD_WIDTH][FIELD_HEIGHT] = {
 					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
 					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
 					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },

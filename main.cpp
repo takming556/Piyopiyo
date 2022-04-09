@@ -1,9 +1,9 @@
 #include "DxLib.h"
+#include <math.h>
 #include "externs.h"
 #include "consts.h"
 #include "class.h"
 #include "enums.h"
-#include <math.h>
 
 
 //プロトタイプ宣言たち
@@ -17,7 +17,10 @@ void onGameover();
 void onResult();
 
 void LoadAllGraph();
+void DrawField();
+void DrawPiece();
 
+//グラフィックハンドルたち
 int hImg_title;
 int hImg_background;
 int hImg_field;
@@ -43,16 +46,18 @@ int hImg_num8;
 int hImg_num9;
 int hImg_cursor;
 
-Cell Field[FIELD_WIDTH][FIELD_HEIGHT]= {
-					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE}
-};
+Field field;
+
+//Cell Field[FIELD_WIDTH][FIELD_HEIGHT]= {
+//					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+//					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE}
+//};
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -111,30 +116,18 @@ void onInstruction() {
 }
 
 void initGame() {
-
-	//for (int width = 0; width < FIELD_WIDTH; width++) {
-	//	for (int height = 0; height < FIELD_HEIGHT; height++) {
-	//		Field[width][height].state = VACANT;
-	//		Field[width][height].VanishScheduledFlag = false;
-	//	}
-	//}
-
-	//for (int width = 0; width < FIELD_WIDTH; width++) {
-	//	for (int height = 0; height < FIELD_HEIGHT; height++) {
-	//		
-	//	}
-	//}
-
 	KeyPushFlag_Enter = false;
 	gamescene = GAME;
 	NowVanishingFlag = false;
 }
+
+
 void onGame() {
 	DrawGraph(0, 0, hImg_background, TRUE); //背景画像を表示
 	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
 	DrawGraph(NEXTPIYO_POS_PXL_X, NEXTPIYO_POS_PXL_Y, hImg_nextframe, FALSE); //Nextぴよピース枠を表示
 	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
-
+	DrawField();
 }
 
 void onGameover() {
@@ -175,31 +168,31 @@ void LoadAllGraph() {
 }
 
 void DrawField(void) {
-	for (char y = 0; y <= 13; y++) {
-		for (char x = 0; x <= 7; x++) {
-			int draw_pos_x = FIELD_PX_POS_X + CW * x + piyopos_offset;
-			int draw_pos_y = FIELD_PX_POS_Y + CH * y + piyopos_offset;
-			switch (Field[x][y]) {
+	for (char y = 0; y < FIELD_HEIGHT; y++) {
+		for (char x = 0; x < FIELD_WIDTH; x++) {
+			int draw_pos_x = FIELD_POS_PXL_X + CELL_WIDTH * x + PIYO_POS_OFFSET;
+			int draw_pos_y = FIELD_POS_PXL_Y + CELL_WIDTH * y + PIYO_POS_OFFSET;
+			switch (field.cellcontainer[x][y].state) {
 			case VACANT:
-				if (Debugmode)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_vacant, TRUE);
+				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_vacant, TRUE);
 				break;
 			case BLUE:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, piyosize_extrate, 0, hImg_blue, TRUE);
+				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_blue, TRUE);
 				break;
 			case GREEN:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, piyosize_extrate, 0, hImg_green, TRUE);
+				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_green, TRUE);
 				break;
 			case PURPLE:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, piyosize_extrate, 0, hImg_purple, TRUE);
+				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_purple, TRUE);
 				break;
 			case RED:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, piyosize_extrate, 0, hImg_red, TRUE);
+				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_red, TRUE);
 				break;
 			case YELLOW:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, piyosize_extrate, 0, hImg_yellow, TRUE);
+				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_yellow, TRUE);
 				break;
 			case OUTSIDE:
-				if (Debugmode)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_outside, TRUE);
+				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_outside, TRUE);
 				break;
 			}
 		}

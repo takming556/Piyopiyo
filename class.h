@@ -1,20 +1,24 @@
 #pragma once
-//#include "defines.h"
+#include <vector>
 #include "consts.h"
-
-enum CellState GetCellStateFromNumber(int Number);
+using std::vector;
 
 class Cell {
 public:
-	enum CellState state;
+	enum State state;
 	bool VanishScheduledFlag;
-	Cell(enum CellState init_state);
-	Cell() {}
+	Cell(enum State init_state);
+	Cell();
+	void setState(enum State given_state);
+	void setRandomState();
 };
-inline Cell::Cell(enum CellState init_state) {
-	state = init_state;
-	VanishScheduledFlag = false;
-}
+
+class Field {
+public:
+	vector<vector<Cell>> cellcontainer;
+	Field();
+};
+
 
 class Piece {
 public:
@@ -25,38 +29,3 @@ public:
 	Cell outer;
 	Piece();
 };
-inline Piece::Piece() {
-	direction = UP;
-	PositionX = INITIAL_PIYO_POS_CEL_X;
-	PositionY = INITIAL_PIYO_POS_CEL_Y;
-	enum CellState RndStateInner = GetCellStateFromNumber(GetRand(4) + 1);
-	enum CellState RndStateOuter = GetCellStateFromNumber(GetRand(4) + 1);
-	inner.state = RndStateInner;
-	outer.state = RndStateOuter;
-}
-
-//enum CellState {
-//	VACANT,     //ぴよが無い
-//	BLUE,       //青ぴよ
-//	GREEN,      //緑ぴよ
-//	PURPLE,     //紫ぴよ
-//	RED,        //赤ぴよ
-//	YELLOW,     //黄ぴよ
-//	OJAMA,      //おじゃまぴよ(将来的に実装するかも？)
-//	OUTSIDE     //外枠（壁とか床）
-//};
-//
-//enum GameScene {
-//	TITLE,
-//	INSTRUCTION,
-//	GAME,
-//	GAMEOVER,
-//	RESULT
-//};
-//
-//enum Direction {
-//	UP,
-//	RIGHT,
-//	DOWN,
-//	LEFT
-//};

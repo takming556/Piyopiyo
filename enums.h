@@ -1,5 +1,5 @@
 #pragma once
-enum CellState {
+enum State {
 	VACANT,     //‚Ò‚æ‚ª–³‚¢
 	BLUE,       //Â‚Ò‚æ
 	GREEN,      //—Î‚Ò‚æ
