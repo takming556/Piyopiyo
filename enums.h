@@ -10,7 +10,7 @@ enum State {
 	OUTSIDE     //äOògÅiï«Ç∆Ç©è∞Åj
 };
 
-enum GameScene {
+enum Scene {
 	TITLE,
 	INSTRUCTION,
 	GAME,
