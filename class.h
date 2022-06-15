@@ -17,8 +17,8 @@ class Field {
 public:
 	vector<vector<Cell>> cellcontainer;
 	Field();
+	void draw();
 };
-
 
 class Piece {
 public:
@@ -28,4 +28,21 @@ public:
 	Cell inner;
 	Cell outer;
 	Piece();
+};
+
+class GameSession {
+public:
+	Field field;
+	Piece piece;
+	int timekeeper;
+	GameSession();
+	void patrol();
+};
+
+class SceneManager {
+public:
+	enum Scene scene;
+	SceneManager();
+	void patrol();
+	GameSession initGame();
 };

@@ -7,57 +7,20 @@
 
 
 //プロトタイプ宣言たち
-void initTitle();
-void initGame();
-
-void onTitle();
-void onInstruction();
-void onGame();
-void onGameover();
-void onResult();
+//void initTitle();
+//void initGame();
+//
+//void onTitle();
+//void onInstruction();
+//void onGame();
+//void onGameover();
+//void onResult();
 
 void LoadAllGraph();
-void DrawField();
-void DrawPiece();
+//void DrawField();
+//void DrawPiece();
 
-//グラフィックハンドルたち
-int hImg_title;
-int hImg_background;
-int hImg_field;
-int hImg_nextframe;
-int hImg_blue;
-int hImg_green;
-int hImg_purple;
-int hImg_red;
-int hImg_yellow;
-int hImg_vacant;
-int hImg_vacant_piece;
-int hImg_outside;
-int hImg_explode;
-int hImg_num0;
-int hImg_num1;
-int hImg_num2;
-int hImg_num3;
-int hImg_num4;
-int hImg_num5;
-int hImg_num6;
-int hImg_num7;
-int hImg_num8;
-int hImg_num9;
-int hImg_cursor;
-
-Field field;
-
-//Cell Field[FIELD_WIDTH][FIELD_HEIGHT]= {
-//					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-//					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE}
-//};
+//Field field;
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -69,30 +32,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);     //描画先を裏画面に設定
 
 	LoadAllGraph();
-	initTitle();
+	SceneManager scenemanager;
+	//initTitle();
 
 	while (true) {
 		if (ProcessMessage() != 0)break; //ウィンドウの閉じるボタンが押下されるとwhile無限ループを抜ける
 
 		ClearDrawScreen();
 
-		switch (gamescene) {
-		case TITLE:
-			onTitle();
-			break;
-		case INSTRUCTION:
-			onInstruction();
-			break;
-		case GAME:
-			onGame();
-			break;
-		case GAMEOVER:
-			onGameover();
-			break;
-		case RESULT:
-			onResult();
-			break;
-		}
+		scenemanager.patrol();
+
+		//switch (gamescene) {
+		//case TITLE:
+		//	onTitle();
+		//	break;
+		//case INSTRUCTION:
+		//	onInstruction();
+		//	break;
+		//case GAME:
+		//	onGame();
+		//	break;
+		//case GAMEOVER:
+		//	onGameover();
+		//	break;
+		//case RESULT:
+		//	onResult();
+		//	break;
+		//}
 
 		ScreenFlip();
 
@@ -100,6 +66,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 
 void initTitle() {
+	PlayMusic("sound/hoge.mp3", DX_PLAYTYPE_BACK);
+	SetVolumeMusic(96);
 	gamescene = TITLE;
 }
 
@@ -118,6 +86,7 @@ void onInstruction() {
 void initGame() {
 	KeyPushFlag_Enter = false;
 	gamescene = GAME;
+	GameSession gamesession;
 	NowVanishingFlag = false;
 }
 
@@ -127,7 +96,8 @@ void onGame() {
 	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
 	DrawGraph(NEXTPIYO_POS_PXL_X, NEXTPIYO_POS_PXL_Y, hImg_nextframe, FALSE); //Nextぴよピース枠を表示
 	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
-	DrawField();
+	//DrawField();
+	field.draw();
 }
 
 void onGameover() {
@@ -154,47 +124,52 @@ void LoadAllGraph() {
 	hImg_vacant_piece = LoadGraph("sprite/vacant_piece.png");
 	hImg_outside = LoadGraph("sprite/outside.png");
 	hImg_explode = LoadGraph("sprite/explode.png");
-	hImg_num0 = LoadGraph("sprite/0.png");
-	hImg_num1 = LoadGraph("sprite/1.png");
-	hImg_num2 = LoadGraph("sprite/2.png");
-	hImg_num3 = LoadGraph("sprite/3.png");
-	hImg_num4 = LoadGraph("sprite/4.png");
-	hImg_num5 = LoadGraph("sprite/5.png");
-	hImg_num6 = LoadGraph("sprite/6.png");
-	hImg_num7 = LoadGraph("sprite/7.png");
-	hImg_num8 = LoadGraph("sprite/8.png");
-	hImg_num9 = LoadGraph("sprite/9.png");
+	char tmp[30];
+	for (int i=0; i < 10; i++) {
+		sprintf(tmp, "sprite/%d.png", i);
+		hImg_num[i] = LoadGraph(tmp);
+	}
+	//hImg_num0 = LoadGraph("sprite/0.png");
+	//hImg_num1 = LoadGraph("sprite/1.png");
+	//hImg_num2 = LoadGraph("sprite/2.png");
+	//hImg_num3 = LoadGraph("sprite/3.png");
+	//hImg_num4 = LoadGraph("sprite/4.png");
+	//hImg_num5 = LoadGraph("sprite/5.png");
+	//hImg_num6 = LoadGraph("sprite/6.png");
+	//hImg_num7 = LoadGraph("sprite/7.png");
+	//hImg_num8 = LoadGraph("sprite/8.png");
+	//hImg_num9 = LoadGraph("sprite/9.png");
 	hImg_cursor = LoadGraph("sprite/cursor.png");
 }
 
-void DrawField(void) {
-	for (char y = 0; y < FIELD_HEIGHT; y++) {
-		for (char x = 0; x < FIELD_WIDTH; x++) {
-			int draw_pos_x = FIELD_POS_PXL_X + CELL_WIDTH * x + PIYO_POS_OFFSET;
-			int draw_pos_y = FIELD_POS_PXL_Y + CELL_WIDTH * y + PIYO_POS_OFFSET;
-			switch (field.cellcontainer[x][y].state) {
-			case VACANT:
-				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_vacant, TRUE);
-				break;
-			case BLUE:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_blue, TRUE);
-				break;
-			case GREEN:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_green, TRUE);
-				break;
-			case PURPLE:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_purple, TRUE);
-				break;
-			case RED:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_red, TRUE);
-				break;
-			case YELLOW:
-				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_yellow, TRUE);
-				break;
-			case OUTSIDE:
-				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_outside, TRUE);
-				break;
-			}
-		}
-	}
-}
+//void DrawField(void) {
+//	for (char y = 0; y < FIELD_HEIGHT; y++) {
+//		for (char x = 0; x < FIELD_WIDTH; x++) {
+//			int draw_pos_x = FIELD_POS_PXL_X + CELL_WIDTH * x + PIYO_POS_OFFSET;
+//			int draw_pos_y = FIELD_POS_PXL_Y + CELL_WIDTH * y + PIYO_POS_OFFSET;
+//			switch (field.cellcontainer[x][y].state) {
+//			case VACANT:
+//				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_vacant, TRUE);
+//				break;
+//			case BLUE:
+//				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_blue, TRUE);
+//				break;
+//			case GREEN:
+//				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_green, TRUE);
+//				break;
+//			case PURPLE:
+//				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_purple, TRUE);
+//				break;
+//			case RED:
+//				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_red, TRUE);
+//				break;
+//			case YELLOW:
+//				DrawRotaGraph(draw_pos_x, draw_pos_y, PIYO_SIZE_EXTRATE, 0, hImg_yellow, TRUE);
+//				break;
+//			case OUTSIDE:
+//				if (DebugFlag==true)DrawRotaGraph(draw_pos_x, draw_pos_y, 1.0, 0, hImg_outside, TRUE);
+//				break;
+//			}
+//		}
+//	}
+//}
