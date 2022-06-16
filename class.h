@@ -9,6 +9,7 @@ public:
 	bool VanishScheduledFlag;
 	Cell(enum State init_state);
 	Cell();
+	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setState(enum State given_state);
 	void setRandomState();
 };
@@ -28,20 +29,25 @@ public:
 	Cell inner;
 	Cell outer;
 	Piece();
+	void draw();
+	void drop_onestep();
 };
 
 class GameSession {
 public:
 	Field field;
 	Piece piece;
-	int timekeeper;
+	int clockkeeper;
+	float piyodropfreq;
 	GameSession();
 	void patrol();
+	void check_clockkeeper();
 };
 
 class SceneManager {
 public:
 	enum Scene scene;
+	GameSession game_session;
 	SceneManager();
 	void patrol();
 	GameSession initGame();

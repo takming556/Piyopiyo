@@ -5,6 +5,7 @@
 #include "class.h"
 #include "enums.h"
 
+#pragma warning(disable:4996)
 
 //プロトタイプ宣言たち
 //void initTitle();
@@ -65,40 +66,40 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 }
 
-void initTitle() {
-	PlayMusic("sound/hoge.mp3", DX_PLAYTYPE_BACK);
-	SetVolumeMusic(96);
-	gamescene = TITLE;
-}
+//void initTitle() {
+//	PlayMusic("sound/hoge.mp3", DX_PLAYTYPE_BACK);
+//	SetVolumeMusic(96);
+//	gamescene = TITLE;
+//}
 
-void onTitle() {
-	DrawRotaGraph(RES_SCR_X / 2 - 1, RES_SCR_Y / 2 - 1, 0.71, 0, hImg_title, TRUE);
-	if (KeyPushFlag_Enter == false && CheckHitKey(KEY_INPUT_RETURN) == TRUE) {
-		KeyPushFlag_Enter = true;
-		initGame();
-	}
-}
+//void onTitle() {
+//	DrawRotaGraph(RES_SCR_X / 2 - 1, RES_SCR_Y / 2 - 1, 0.71, 0, hImg_title, TRUE);
+//	if (KeyPushFlag_Enter == false && CheckHitKey(KEY_INPUT_RETURN) == TRUE) {
+//		KeyPushFlag_Enter = true;
+//		initGame();
+//	}
+//}
 
 void onInstruction() {
 
 }
 
-void initGame() {
-	KeyPushFlag_Enter = false;
-	gamescene = GAME;
-	GameSession gamesession;
-	NowVanishingFlag = false;
-}
+//void initGame() {
+//	KeyPushFlag_Enter = false;
+//	gamescene = GAME;
+//	GameSession gamesession;
+//	NowVanishingFlag = false;
+//}
 
 
-void onGame() {
-	DrawGraph(0, 0, hImg_background, TRUE); //背景画像を表示
-	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
-	DrawGraph(NEXTPIYO_POS_PXL_X, NEXTPIYO_POS_PXL_Y, hImg_nextframe, FALSE); //Nextぴよピース枠を表示
-	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
-	//DrawField();
-	field.draw();
-}
+//void onGame() {
+//	DrawGraph(0, 0, hImg_background, TRUE); //背景画像を表示
+//	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
+//	DrawGraph(NEXTPIYO_POS_PXL_X, NEXTPIYO_POS_PXL_Y, hImg_nextframe, FALSE); //Nextぴよピース枠を表示
+//	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
+//	//DrawField();
+//	field.draw();
+//}
 
 void onGameover() {
 

@@ -13,7 +13,7 @@ bool KeyPushFlag_X = false;
 bool KeyPushFlag_Space = false;
 bool KeyPushFlag_Enter = false;
 
-bool NowVanishingFlag = false;
+//bool NowVanishingFlag = false;
 
 //グラフィックハンドルたち
 int hImg_title;

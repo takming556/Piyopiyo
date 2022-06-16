@@ -17,8 +17,8 @@ extern bool KeyPushFlag_X;
 extern bool KeyPushFlag_Space;
 extern bool KeyPushFlag_Enter;
 
-//状態を表すフラグたち
-extern bool NowVanishingFlag;
+////状態を表すフラグたち
+//extern bool NowVanishingFlag;
 
 //グラフィックハンドルたち
 extern int hImg_title;
