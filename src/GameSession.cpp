@@ -7,6 +7,7 @@
 GameSession::GameSession() {
 	clockkeeper = GetNowCount();
 	piyodropfreq = 1.0;
+	PieceLandingFlag = false;
 }
 
 void GameSession::patrol() {
@@ -16,11 +17,12 @@ void GameSession::patrol() {
 	DrawFormatString(0, 740, GetColor(255, 255, 0), "©¨‚Å‚Ò‚æˆÚ“®@Z‚Å¶‰ñ“]@X‚Å‰E‰ñ“]");
 	field.draw();
 	piece.draw();
-	check_keyinput();
-	check_clockkeeper();
+	deal_keyinput();
+	deal_clockkeeper();
+	
 }
 
-void GameSession::check_clockkeeper() {
+void GameSession::deal_clockkeeper() {
 	float piyodropwait = 1.0 / piyodropfreq;
 	if (GetNowCount() >= clockkeeper + piyodropwait * 1000) {
 		clockkeeper = GetNowCount();
@@ -28,7 +30,7 @@ void GameSession::check_clockkeeper() {
 	}
 }
 
-void GameSession::check_keyinput() {
+void GameSession::deal_keyinput() {
 	char keybuf[256];
 	GetHitKeyStateAll(keybuf);
 
@@ -67,4 +69,8 @@ void GameSession::check_keyinput() {
 	else if (KeyPushFlag_Right == true && keybuf[KEY_INPUT_RIGHT] == 0) {
 		KeyPushFlag_Right = false;
 	}
+}
+
+bool GameSession::check_Piece_landing() {
+	
 }
