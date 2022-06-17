@@ -31,6 +31,10 @@ public:
 	Piece();
 	void draw();
 	void drop_onestep();
+	void move_right();
+	void move_left();
+	void rotate_forwardclockwise();
+	void rotate_counterclockwise();
 };
 
 class GameSession {
@@ -42,6 +46,7 @@ public:
 	GameSession();
 	void patrol();
 	void check_clockkeeper();
+	void check_keyinput();
 };
 
 class SceneManager {

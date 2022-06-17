@@ -16,6 +16,7 @@ void GameSession::patrol() {
 	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
 	field.draw();
 	piece.draw();
+	check_keyinput();
 	check_clockkeeper();
 }
 
@@ -24,5 +25,46 @@ void GameSession::check_clockkeeper() {
 	if (GetNowCount() >= clockkeeper + piyodropwait * 1000) {
 		clockkeeper = GetNowCount();
 		piece.drop_onestep();
+	}
+}
+
+void GameSession::check_keyinput() {
+	char keybuf[256];
+	GetHitKeyStateAll(keybuf);
+
+	//Zキー
+	if (KeyPushFlag_Z == false && keybuf[KEY_INPUT_Z] == 1) {
+		KeyPushFlag_Z = true;
+		piece.rotate_counterclockwise();
+	}
+	else if (KeyPushFlag_Z == true && keybuf[KEY_INPUT_Z] == 0) {
+		KeyPushFlag_Z = false;
+	}
+
+	//Xキー
+	if (KeyPushFlag_X == false && keybuf[KEY_INPUT_X] == 1) {
+		KeyPushFlag_X = true;
+		piece.rotate_forwardclockwise();
+	}
+	else if (KeyPushFlag_X == true && keybuf[KEY_INPUT_X] == 0) {
+		KeyPushFlag_X = false;
+	}
+
+	//左矢印キー
+	if (KeyPushFlag_Left == false && keybuf[KEY_INPUT_LEFT] == 1) {
+		KeyPushFlag_Left = true;
+		piece.move_left();
+	}
+	else if (KeyPushFlag_Left == true && keybuf[KEY_INPUT_LEFT] == 0) {
+		KeyPushFlag_Left = false;
+	}
+
+	//右矢印キー
+	if (KeyPushFlag_Right == false && keybuf[KEY_INPUT_RIGHT] == 1) {
+		KeyPushFlag_Right = true;
+		piece.move_right();
+	}
+	else if (KeyPushFlag_Right == true && keybuf[KEY_INPUT_RIGHT] == 0) {
+		KeyPushFlag_Right = false;
 	}
 }
