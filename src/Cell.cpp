@@ -52,6 +52,10 @@ void Cell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
 	}
 }
 
+void Cell::draw(valarray<int> drawPosition) {
+
+}
+
 void Cell::setRandomState() {
 	int Number = GetRand(4) + 1;
 	switch (Number) {

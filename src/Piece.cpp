@@ -6,8 +6,7 @@
 
 Piece::Piece() {
 	compass = INITIAL_PIECE_DIRECTION;
-	PositionX = INITIAL_PIYO_POS_CEL_X;
-	PositionY = INITIAL_PIYO_POS_CEL_Y;
+	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
 	inner.setPosition(Position);
 	outer.setPosition(Position, compass.direction);
 	//switch (compass.direction) {
