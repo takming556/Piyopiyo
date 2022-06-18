@@ -9,10 +9,16 @@ Cell::Cell() {
 	VanishScheduledFlag = false;
 }
 
-Cell::Cell(enum State init_state) {
-	state = init_state;
-	VanishScheduledFlag = false;
-}
+//Cell::Cell(enum State init_state) {
+//	state = init_state;
+//	VanishScheduledFlag = false;
+//}
+//
+//Cell::Cell(enum State init_state, unsigned int init_PositionX, unsigned int init_PositionY) {
+//	state = init_state;
+//	PositionX = init_PositionX;
+//	PositionY = init_PositionY;
+//}
 
 void Cell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
 	draw_pos_pxl_x += PIYO_POS_OFFSET;
@@ -41,10 +47,6 @@ void Cell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
 		if (DebugFlag == true)DrawRotaGraph(draw_pos_pxl_x, draw_pos_pxl_y, 1.0, 0, hImg_outside, TRUE);
 		break;
 	}
-}
-
-void Cell::setState(enum State given_state) {
-	state = given_state;
 }
 
 void Cell::setRandomState() {

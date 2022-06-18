@@ -33,29 +33,43 @@ void Piece::draw() {
 
 void Piece::drop_onestep() {
 	PositionY += 1;
+	inner.PositionY += 1;
+	outer.PositionY += 1;
 }
 
 void Piece::move_right() {
 	PositionX += 1;
+	inner.PositionX += 1;
+	outer.PositionX += 1;
 }
 
 void Piece::move_left() {
 	PositionX += -1;
+	inner.PositionX += -1;
+	outer.PositionX += -1;
 }
 
 void Piece::rotate_forwardclockwise() {
 	switch (direction) {
 	case UP:
 		direction = RIGHT;
+		outer.PositionX = inner.PositionX + 1;
+		outer.PositionY = inner.PositionY;
 		break;
 	case RIGHT:
 		direction = DOWN;
+		outer.PositionX = inner.PositionX;
+		outer.PositionY = inner.PositionY + 1;
 		break;
 	case DOWN:
 		direction = LEFT;
+		outer.PositionX = inner.PositionX - 1;
+		outer.PositionY = inner.PositionY;
 		break;
 	case LEFT:
 		direction = UP;
+		outer.PositionX = inner.PositionX;
+		outer.PositionY = inner.PositionY - 1;
 		break;
 	}
 }
@@ -64,15 +78,23 @@ void Piece::rotate_counterclockwise() {
 	switch (direction) {
 	case UP:
 		direction = LEFT;
+		outer.PositionX = inner.PositionX - 1;
+		outer.PositionY = inner.PositionY;
 		break;
 	case RIGHT:
 		direction = UP;
+		outer.PositionX = inner.PositionX;
+		outer.PositionY = inner.PositionY - 1;
 		break;
 	case DOWN:
 		direction = RIGHT;
+		outer.PositionX = inner.PositionX + 1;
+		outer.PositionY = inner.PositionY;
 		break;
 	case LEFT:
 		direction = DOWN;
+		outer.PositionX = inner.PositionX;
+		outer.PositionY = inner.PositionY + 1;
 		break;
 	}
 }

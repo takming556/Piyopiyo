@@ -3,14 +3,21 @@
 #include "consts.h"
 using std::vector;
 
+class Direction {
+public:
+
+};
+
 class Cell {
 public:
 	enum State state;
+	unsigned int PositionX;
+	unsigned int PositionY;
 	bool VanishScheduledFlag;
-	Cell(enum State init_state);
+	//Cell(enum State init_state);
+	//Cell(enum State init_state, unsigned int init_PositionX, unsigned int init_PositionY);
 	Cell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
-	void setState(enum State given_state);
 	void setRandomState();
 	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
 	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
