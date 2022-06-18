@@ -5,9 +5,30 @@
 #include "class.h"
 
 Piece::Piece() {
-	direction = UP;
+	compass = INITIAL_PIECE_DIRECTION;
 	PositionX = INITIAL_PIYO_POS_CEL_X;
 	PositionY = INITIAL_PIYO_POS_CEL_Y;
+	inner.setPosition(Position);
+	outer.setPosition(Position, compass.direction);
+	//switch (compass.direction) {
+	//case UP:
+	//	outer
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY - 1;
+	//	break;
+	//case RIGHT:
+	//	outer.PositionX = inner.PositionX + 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//case DOWN:
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY + 1;
+	//	break;
+	//case LEFT:
+	//	outer.PositionX = inner.PositionX - 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//}
 	inner.setRandomState();
 	outer.setRandomState();
 }
@@ -15,7 +36,7 @@ Piece::Piece() {
 void Piece::draw() {
 	inner.draw(FIELD_POS_PXL_X + CELL_WIDTH * PositionX, FIELD_POS_PXL_Y + CELL_HEIGHT * PositionY);
 
-	switch (direction) {
+	switch (compass.direction) {
 	case UP:
 		outer.draw(FIELD_POS_PXL_X + CELL_WIDTH * PositionX, FIELD_POS_PXL_Y + CELL_HEIGHT * (PositionY - 1));
 		break;
@@ -50,51 +71,64 @@ void Piece::move_left() {
 }
 
 void Piece::rotate_forwardclockwise() {
-	switch (direction) {
-	case UP:
-		direction = RIGHT;
-		outer.PositionX = inner.PositionX + 1;
-		outer.PositionY = inner.PositionY;
-		break;
-	case RIGHT:
-		direction = DOWN;
-		outer.PositionX = inner.PositionX;
-		outer.PositionY = inner.PositionY + 1;
-		break;
-	case DOWN:
-		direction = LEFT;
-		outer.PositionX = inner.PositionX - 1;
-		outer.PositionY = inner.PositionY;
-		break;
-	case LEFT:
-		direction = UP;
-		outer.PositionX = inner.PositionX;
-		outer.PositionY = inner.PositionY - 1;
-		break;
-	}
+	//compass++;
+	//compass += 1;
+	compass = compass + 1;
+
+
+	//switch (compass.direction) {
+	//case UP:
+	//	compass.direction = RIGHT;
+	//	outer.PositionX = inner.PositionX + 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//case RIGHT:
+	//	compass.direction = DOWN;
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY + 1;
+	//	break;
+	//case DOWN:
+	//	compass.direction = LEFT;
+	//	outer.PositionX = inner.PositionX - 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//case LEFT:
+	//	compass.direction = UP;
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY - 1;
+	//	break;
+	//}
 }
 
 void Piece::rotate_counterclockwise() {
-	switch (direction) {
-	case UP:
-		direction = LEFT;
-		outer.PositionX = inner.PositionX - 1;
-		outer.PositionY = inner.PositionY;
-		break;
-	case RIGHT:
-		direction = UP;
-		outer.PositionX = inner.PositionX;
-		outer.PositionY = inner.PositionY - 1;
-		break;
-	case DOWN:
-		direction = RIGHT;
-		outer.PositionX = inner.PositionX + 1;
-		outer.PositionY = inner.PositionY;
-		break;
-	case LEFT:
-		direction = DOWN;
-		outer.PositionX = inner.PositionX;
-		outer.PositionY = inner.PositionY + 1;
-		break;
-	}
+	//compass--;
+	//compass -= 1;
+	compass = compass - 1;
+	//switch (compass.direction) {
+	//case UP:
+	//	compass.direction = LEFT;
+	//	outer.PositionX = inner.PositionX - 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//case RIGHT:
+	//	compass.direction = UP;
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY - 1;
+	//	break;
+	//case DOWN:
+	//	compass.direction = RIGHT;
+	//	outer.PositionX = inner.PositionX + 1;
+	//	outer.PositionY = inner.PositionY;
+	//	break;
+	//case LEFT:
+	//	compass.direction = DOWN;
+	//	outer.PositionX = inner.PositionX;
+	//	outer.PositionY = inner.PositionY + 1;
+	//	break;
+	//}
+}
+
+void Piece::setPosition(int given_x, int given_y) {
+	valarray<int> newPosition = { given_x, given_y };
+	Position = newPosition;
 }

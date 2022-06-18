@@ -1,5 +1,8 @@
 #pragma once
+#include <valarray>
 #include "enums.h"
+
+using std::valarray;
 
 //定数たち
 const bool DebugFlag = true;                   //TRUEにすると「空」「外」などの表示がされる
@@ -32,6 +35,14 @@ const int OFFSET_NEXTFRAME_POS_PXL_Y = 0;
 
 const unsigned int INITIAL_PIYO_POS_CEL_X = 3;  //ぴよPieceの初期セル位置X座標
 const unsigned int INITIAL_PIYO_POS_CEL_Y = 1;  //ぴよPieceの初期セル位置Y座標
+
+const enum Direction INITIAL_PIECE_DIRECTION = UP; //ぴよPieceの初期方向
+
+const valarray<int> upward{ 0,-1 };
+const valarray<int> rightward{ 1,0 };
+const valarray<int> downward{ 0,1 };
+const valarray<int> leftward{ -1,0 };
+
 
 const enum State initFieldCellState[FIELD_WIDTH][FIELD_HEIGHT] = {
 					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},

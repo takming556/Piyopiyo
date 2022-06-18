@@ -1,8 +1,11 @@
 #include "DxLib.h"
+#include <valarray>
 #include "externs.h"
 #include "consts.h"
 #include "enums.h"
 #include "class.h"
+
+using std::valarray;
 
 Cell::Cell() {
 	state = VACANT;
@@ -75,6 +78,32 @@ void Cell::setRandomState() {
 		break;
 	case 7:
 		state = OUTSIDE;
+		break;
+	}
+}
+
+void Cell::setPosition(int given_x, int given_y) {
+	valarray<int> newPosition = { given_x, given_y };
+	Position = newPosition;
+}
+
+void Cell::setPosition(valarray<int> givenPosition) {
+	Position = givenPosition;
+}
+
+void Cell::setPosition(valarray<int> basePosition, Direction given_direction) {
+	switch (given_direction) {
+	case UP:
+		Position = basePosition + upward;
+		break;
+	case RIGHT:
+		Position = basePosition + rightward;
+		break;
+	case DOWN:
+		Position = basePosition + downward;
+		break;
+	case LEFT:
+		Position = basePosition + leftward;
 		break;
 	}
 }

@@ -24,3 +24,9 @@ enum Direction {
 	DOWN,
 	LEFT
 };
+
+enum Dimension {
+	X,
+	Y,
+	Z
+};

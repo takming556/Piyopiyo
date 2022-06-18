@@ -19,7 +19,6 @@ void GameSession::patrol() {
 	piece.draw();
 	deal_keyinput();
 	deal_clockkeeper();
-	
 }
 
 void GameSession::deal_clockkeeper() {

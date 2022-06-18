@@ -1,24 +1,51 @@
 #pragma once
 #include <vector>
+#include <valarray>
 #include "consts.h"
 using std::vector;
+using std::valarray;
 
-class Direction {
+class Compass{
 public:
-
+	Direction direction;
+	Compass();
+	Compass(Direction given_direction);
+	void operator ++(int n);
+	void operator --(int n);
+	Compass operator ++();
+	Compass operator --();
+	void operator +=(int rotate_amount_plus);
+	void operator -=(int rotate_amount_minus);
+	Compass operator +(int rotate_amount_plus);
+	Compass operator -(int rotate_amount_minus);
+	Compass operator =(Compass righthand);
+	Compass operator =(Direction righthand);
+	bool operator ==(Compass righthand);
+	bool operator !=(Compass righthand);
+	bool operator ==(Direction righthand);
+	bool operator !=(Direction righthand);
 };
 
 class Cell {
 public:
 	enum State state;
-	unsigned int PositionX;
-	unsigned int PositionY;
+	//int PositionX;
+	//int PositionY;
+	valarray<int> Position;
+	Cell* upper;
+	Cell* righter;
+	Cell* downer;
+	Cell* lefter;
 	bool VanishScheduledFlag;
 	//Cell(enum State init_state);
 	//Cell(enum State init_state, unsigned int init_PositionX, unsigned int init_PositionY);
 	Cell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
+	void draw(valarray<int> drowPosition);
 	void setRandomState();
+	void setPosition(int given_x, int given_y);
+	void setPosition(valarray<int> givenPosition);
+	void setPosition(valarray<int> basePosition, Direction given_direction);
 	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
 	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
 	//また、Pieceの位置・向きが変動した場合にinner, outerの存在位置情報を更新する必要が出てくるだろう
@@ -34,9 +61,10 @@ public:
 
 class Piece {
 public:
-	enum Direction direction;
-	unsigned int PositionX;
-	unsigned int PositionY;
+	Compass compass;
+	//unsigned int PositionX;
+	//unsigned int PositionY;
+	valarray<int> Position;
 	Cell inner;
 	Cell outer;
 	Piece();
@@ -46,6 +74,7 @@ public:
 	void move_left();
 	void rotate_forwardclockwise();
 	void rotate_counterclockwise();
+	void setPosition(int given_x, int given_y);
 };
 
 class GameSession {

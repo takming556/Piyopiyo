@@ -11,6 +11,18 @@ Field::Field() : cellcontainer(FIELD_WIDTH, vector<Cell>(FIELD_HEIGHT)) {
 			cellcontainer[width][height].state = initFieldCellState[width][height];
 			cellcontainer[width][height].PositionX = width;
 			cellcontainer[width][height].PositionY = height;
+
+			if (height == 0) cellcontainer[width][height].upper = nullptr;
+			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
+
+			if (width == FIELD_WIDTH - 1) cellcontainer[width][height].righter = nullptr;
+			else cellcontainer[width][height].righter = &cellcontainer[width + 1][height];
+
+			if (height == FIELD_HEIGHT - 1) cellcontainer[width][height].downer = nullptr;
+			else cellcontainer[width][height].downer = &cellcontainer[width][height - 1];
+
+			if (width == 0) cellcontainer[width][height].lefter = nullptr;
+			else cellcontainer[width][height].lefter = &cellcontainer[width - 1][height];
 		}
 	}
 }
