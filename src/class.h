@@ -5,6 +5,11 @@
 using std::vector;
 using std::valarray;
 
+class Cell;
+class Piece;
+class Field;
+
+
 class Compass{
 public:
 	Direction direction;
@@ -32,6 +37,8 @@ public:
 	//int PositionX;
 	//int PositionY;
 	valarray<int> Position;
+	Field* master_field;
+	Piece* master_piece;
 	Cell* upper;
 	Cell* righter;
 	Cell* downer;
@@ -41,11 +48,11 @@ public:
 	//Cell(enum State init_state, unsigned int init_PositionX, unsigned int init_PositionY);
 	Cell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
-	void draw(valarray<int> drowPosition);
 	void setRandomState();
 	void setPosition(int given_x, int given_y);
 	void setPosition(valarray<int> givenPosition);
 	void setPosition(valarray<int> basePosition, Direction given_direction);
+	void setSurrounder(valarray<int> givenPosition);
 	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
 	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
 	//また、Pieceの位置・向きが変動した場合にinner, outerの存在位置情報を更新する必要が出てくるだろう
@@ -57,6 +64,7 @@ public:
 	vector<vector<Cell>> cellcontainer;
 	Field();
 	void draw();
+	Cell* getCellptr(valarray<int> givenPosition);
 };
 
 class Piece {
@@ -67,6 +75,7 @@ public:
 	valarray<int> Position;
 	Cell inner;
 	Cell outer;
+	Field* master_field;
 	Piece();
 	void draw();
 	void drop_onestep();

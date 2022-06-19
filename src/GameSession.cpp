@@ -8,6 +8,7 @@ GameSession::GameSession() {
 	clockkeeper = GetNowCount();
 	piyodropfreq = 1.0;
 	PieceLandingFlag = false;
+	piece.master_field = &field;
 }
 
 void GameSession::patrol() {

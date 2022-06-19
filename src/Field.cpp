@@ -6,11 +6,14 @@
 
 
 Field::Field() : cellcontainer(FIELD_WIDTH, vector<Cell>(FIELD_HEIGHT)) {
-	for (unsigned int width = 0; width < FIELD_WIDTH; width++) {
-		for (unsigned int height = 0; height < FIELD_HEIGHT; height++) {
+	for (int width = 0; width < FIELD_WIDTH; width++) {
+		for (int height = 0; height < FIELD_HEIGHT; height++) {
 			cellcontainer[width][height].state = initFieldCellState[width][height];
-			cellcontainer[width][height].PositionX = width;
-			cellcontainer[width][height].PositionY = height;
+			cellcontainer[width][height].setPosition(width, height);
+			//cellcontainer[width][height].PositionX = width;
+			//cellcontainer[width][height].PositionY = height;
+
+			cellcontainer[width][height].master_field = this;
 
 			if (height == 0) cellcontainer[width][height].upper = nullptr;
 			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
@@ -37,4 +40,10 @@ void Field::draw() {
 			cellcontainer[x][y].draw(draw_pos_x, draw_pos_y);
 		}
 	}
+}
+
+Cell* Field::getCellptr(valarray<int> givenPosition) {
+	int given_x = givenPosition[0];
+	int given_y = givenPosition[1];
+	return &cellcontainer[given_x][given_y];
 }

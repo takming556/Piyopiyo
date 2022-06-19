@@ -9,6 +9,13 @@ using std::valarray;
 
 Cell::Cell() {
 	state = VACANT;
+	setPosition(-1, -1);
+	master_field = nullptr;
+	master_piece = nullptr;
+	upper = nullptr;
+	righter = nullptr;
+	downer = nullptr;
+	lefter = nullptr;
 	VanishScheduledFlag = false;
 }
 
@@ -50,10 +57,6 @@ void Cell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
 		if (DebugFlag == true)DrawRotaGraph(draw_pos_pxl_x, draw_pos_pxl_y, 1.0, 0, hImg_outside, TRUE);
 		break;
 	}
-}
-
-void Cell::draw(valarray<int> drawPosition) {
-
 }
 
 void Cell::setRandomState() {
@@ -110,4 +113,11 @@ void Cell::setPosition(valarray<int> basePosition, Direction given_direction) {
 		Position = basePosition + leftward;
 		break;
 	}
+}
+
+void Cell::setSurrounder(valarray<int> givenPosition) {
+	upper = master_piece->master_field->getCellptr(givenPosition + upward);
+	righter = master_piece->master_field->getCellptr(givenPosition + rightward);
+	downer = master_piece->master_field->getCellptr(givenPosition + downward);
+	lefter = master_piece->master_field->getCellptr(givenPosition + leftward);
 }
