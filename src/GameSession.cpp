@@ -4,11 +4,11 @@
 #include "enums.h"
 #include "class.h"
 
-GameSession::GameSession() {
+GameSession::GameSession() : piece(&field) {
 	clockkeeper = GetNowCount();
 	piyodropfreq = 1.0;
 	PieceLandingFlag = false;
-	piece.master_field = &field;
+	//piece.master_field = &field;
 }
 
 void GameSession::patrol() {

@@ -5,13 +5,11 @@
 #include "class.h"
 
 
-Field::Field() : cellcontainer(FIELD_WIDTH, vector<Cell>(FIELD_HEIGHT)) {
+Field::Field() : cellcontainer(FIELD_WIDTH, vector<FCell>(FIELD_HEIGHT)) {
 	for (int width = 0; width < FIELD_WIDTH; width++) {
 		for (int height = 0; height < FIELD_HEIGHT; height++) {
 			cellcontainer[width][height].state = initFieldCellState[width][height];
 			cellcontainer[width][height].setPosition(width, height);
-			//cellcontainer[width][height].PositionX = width;
-			//cellcontainer[width][height].PositionY = height;
 
 			cellcontainer[width][height].master_field = this;
 
@@ -30,6 +28,8 @@ Field::Field() : cellcontainer(FIELD_WIDTH, vector<Cell>(FIELD_HEIGHT)) {
 	}
 }
 
+Field::Field() 
+
 void Field::draw() {
 	int draw_pos_x;
 	int draw_pos_y;
@@ -42,7 +42,7 @@ void Field::draw() {
 	}
 }
 
-Cell* Field::getCellptr(valarray<int> givenPosition) {
+FCell* Field::getFCellptr(valarray<int> givenPosition) {
 	int given_x = givenPosition[0];
 	int given_y = givenPosition[1];
 	return &cellcontainer[given_x][given_y];

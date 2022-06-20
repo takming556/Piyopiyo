@@ -5,9 +5,11 @@
 using std::vector;
 using std::valarray;
 
-class Cell;
-class Piece;
+//class Cell;
 class Field;
+class Piece;
+class FCell;
+class PCell;
 
 
 class Compass{
@@ -31,52 +33,80 @@ public:
 	bool operator !=(Direction righthand);
 };
 
-class Cell {
+//class Cell {
+//public:
+//	enum State state;
+//	valarray<int> Position;
+//	//Field* master_field;
+//	//Piece* master_piece;
+//	Cell* upper;
+//	Cell* righter;
+//	Cell* downer;
+//	Cell* lefter;
+//	bool VanishScheduledFlag;
+//	Cell();
+//	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
+//	void setRandomState();
+//	void setPosition(int given_x, int given_y);
+//	void setPosition(valarray<int> given_position);
+//	void setPosition(valarray<int> base_position, Direction given_direction);
+//	void setSurrounder(valarray<int> given_position);
+//	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
+//	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
+//	//また、Pieceの位置・向きが変動した場合にinner, outerの存在位置情報を更新する必要が出てくるだろう
+//	//面倒かもしれないが、そうすれば向きによって条件分岐することなくPieceの衝突判定が行えてあとあと苦労せずに済む可能性が高い
+//};
+
+class FCell {
 public:
 	enum State state;
-	//int PositionX;
-	//int PositionY;
 	valarray<int> Position;
 	Field* master_field;
-	Piece* master_piece;
-	Cell* upper;
-	Cell* righter;
-	Cell* downer;
-	Cell* lefter;
+	FCell* upper;
+	FCell* righter;
+	FCell* downer;
+	FCell* lefter;
 	bool VanishScheduledFlag;
-	//Cell(enum State init_state);
-	//Cell(enum State init_state, unsigned int init_PositionX, unsigned int init_PositionY);
-	Cell();
+	FCell(Field* given_master_field_ptr);
+	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
+	void setPosition(int given_x, int given_y);
+};
+
+class PCell {
+public:
+	enum State state;
+	valarray<int> Position;
+	Piece* master_piece;
+	FCell* upper;
+	FCell* righter;
+	FCell* downer;
+	FCell* lefter;
+	PCell(Piece* given_master_piece_ptr);
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setRandomState();
 	void setPosition(int given_x, int given_y);
-	void setPosition(valarray<int> givenPosition);
-	void setPosition(valarray<int> basePosition, Direction given_direction);
-	void setSurrounder(valarray<int> givenPosition);
-	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
-	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
-	//また、Pieceの位置・向きが変動した場合にinner, outerの存在位置情報を更新する必要が出てくるだろう
-	//面倒かもしれないが、そうすれば向きによって条件分岐することなくPieceの衝突判定が行えてあとあと苦労せずに済む可能性が高い
+	void setPosition(valarray<int> given_position);
+	void setPosition(valarray<int> base_position, Direction given_direction);
+	void setSurrounder(valarray<int> given_position);
 };
 
 class Field {
 public:
-	vector<vector<Cell>> cellcontainer;
+	//vector<vector<FCell>> cellcontainer;
+	FCell** cellcontainer;
 	Field();
 	void draw();
-	Cell* getCellptr(valarray<int> givenPosition);
+	FCell* getFCellptr(valarray<int> givenPosition);
 };
 
 class Piece {
 public:
 	Compass compass;
-	//unsigned int PositionX;
-	//unsigned int PositionY;
 	valarray<int> Position;
-	Cell inner;
-	Cell outer;
+	PCell inner;
+	PCell outer;
 	Field* master_field;
-	Piece();
+	Piece(Field* given_master_field_ptr);
 	void draw();
 	void drop_onestep();
 	void move_right();
