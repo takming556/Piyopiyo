@@ -8,19 +8,22 @@
 
 using std::valarray;
 
-FCell::FCell(Field* given_master_field_ptr) {
-	master_field = given_master_field_ptr;
-	state = VACANT;
-	setPosition(-1, -1);
-	master_field = given_master_field_ptr;
-	upper = nullptr;
-	righter = nullptr;
-	downer = nullptr;
-	lefter = nullptr;
-	VanishScheduledFlag = false;
-}
+//FCell::FCell(Field* given_master_field_ptr) {
+//	master_field = given_master_field_ptr;
+//	state = VACANT;
+//	setPosition(-1, -1);
+//	master_field = given_master_field_ptr;
+//	upper = nullptr;
+//	righter = nullptr;
+//	downer = nullptr;
+//	lefter = nullptr;
+//	VanishScheduledFlag = false;
+//}
 
 FCell::FCell() {
+	state = VACANT;
+	setPosition(-1, -1);
+	VanishScheduledFlag = false;
 }
 
 void FCell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {

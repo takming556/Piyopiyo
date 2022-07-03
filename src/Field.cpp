@@ -38,12 +38,18 @@ Field::Field() {
 
 	for (int width = 0; width < FIELD_WIDTH; width++) {
 		for (int height = 0; height < FIELD_HEIGHT; height++) {
-			FCell** memptr = &(&cellcontainer[width])[height];
-			new(memptr) FCell(this);
-			cellcontainer[width][height].state = initFieldCellState[width][height];
-			cellcontainer[width][height].setPosition(width, height);
+			//FCell** memptr = &(&cellcontainer[width])[height];
+			//new(memptr) FCell(this);
 
 			cellcontainer[width][height].master_field = this;
+			cellcontainer[width][height].state = initFieldCellState[width][height];
+			cellcontainer[width][height].VanishScheduledFlag = false;
+			cellcontainer[width][height].setPosition(width, height);
+
+
+			//cellcontainer[width][height].state = initFieldCellState[width][height];
+
+			//cellcontainer[width][height].master_field = this;
 
 			if (height == 0) cellcontainer[width][height].upper = nullptr;
 			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
@@ -59,6 +65,21 @@ Field::Field() {
 		}
 	}
 }
+
+//Field::Field() {
+//	cellcontainer = new FCell * [FIELD_WIDTH];
+//	for (int i = 0; i < FIELD_WIDTH; ++i) {
+//		cellcontainer[i] = new FCell[FIELD_HEIGHT];
+//	}
+//
+//	for (int width = 0; width < FIELD_WIDTH; ++width) {
+//		for (int height = 0; height < FIELD_HEIGHT; ++height) {
+//			cellcontainer[width][height].state = initFieldCellState[width][height];
+//			cellcontainer[width][height].setPosition(width, height);
+//			cellcontainer[width][height].VanishScheduledFlag = false;
+//		}
+//	}
+//}
 
 
 void Field::draw() {

@@ -10,10 +10,13 @@ using std::valarray;
 
 PCell::PCell(Piece* given_master_piece_ptr) {
 	master_piece = given_master_piece_ptr;
-	//state = VACANT;
 	setRandomState();
-	//setPosition(-1, -1);
+	setPosition(-1, -1);
 }
+
+//PCell::PCell() {
+//	setRandomState();
+//}
 
 void PCell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
 	draw_pos_pxl_x += PIYO_POS_OFFSET;

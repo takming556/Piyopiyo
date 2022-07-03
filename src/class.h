@@ -67,7 +67,7 @@ public:
 	FCell* downer;
 	FCell* lefter;
 	bool VanishScheduledFlag;
-	FCell(Field* given_master_field_ptr);
+	//FCell(Field* given_master_field_ptr);
 	FCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setPosition(int given_x, int given_y);
@@ -83,12 +83,18 @@ public:
 	FCell* downer;
 	FCell* lefter;
 	PCell(Piece* given_master_piece_ptr);
+	//PCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setRandomState();
 	void setPosition(int given_x, int given_y);
 	void setPosition(valarray<int> given_position);
 	void setPosition(valarray<int> base_position, Direction given_direction);
 	void setSurrounder(valarray<int> given_position);
+};
+
+class Container {
+	FCell** fcells;
+	Container(Field* given_master_field);
 };
 
 class Field {
@@ -108,6 +114,7 @@ public:
 	PCell outer;
 	Field* master_field;
 	Piece(Field* given_master_field_ptr);
+	//Piece();
 	void draw();
 	void drop_onestep();
 	void move_right();
