@@ -1,3 +1,4 @@
+#include <new>
 #include "DxLib.h"
 #include "externs.h"
 #include "consts.h"
@@ -5,9 +6,40 @@
 #include "class.h"
 
 
-Field::Field() : cellcontainer(FIELD_WIDTH, vector<FCell>(FIELD_HEIGHT)) {
+//Field::Field() : cellcontainer(FIELD_WIDTH, vector<FCell>(FIELD_HEIGHT)) {
+//	for (int width = 0; width < FIELD_WIDTH; width++) {
+//		for (int height = 0; height < FIELD_HEIGHT; height++) {
+//			cellcontainer[width][height].state = initFieldCellState[width][height];
+//			cellcontainer[width][height].setPosition(width, height);
+//
+//			cellcontainer[width][height].master_field = this;
+//
+//			if (height == 0) cellcontainer[width][height].upper = nullptr;
+//			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
+//
+//			if (width == FIELD_WIDTH - 1) cellcontainer[width][height].righter = nullptr;
+//			else cellcontainer[width][height].righter = &cellcontainer[width + 1][height];
+//
+//			if (height == FIELD_HEIGHT - 1) cellcontainer[width][height].downer = nullptr;
+//			else cellcontainer[width][height].downer = &cellcontainer[width][height - 1];
+//
+//			if (width == 0) cellcontainer[width][height].lefter = nullptr;
+//			else cellcontainer[width][height].lefter = &cellcontainer[width - 1][height];
+//		}
+//	}
+//}
+
+Field::Field() {
+	//2ŽŸŒ³”z—ñcellcontainer‚ð“®“IŠm•Û
+	cellcontainer = new FCell * [FIELD_WIDTH];
+	for (int i = 0; i < FIELD_WIDTH; ++i) {
+		cellcontainer[i] = new FCell[FIELD_HEIGHT];
+	}
+
 	for (int width = 0; width < FIELD_WIDTH; width++) {
 		for (int height = 0; height < FIELD_HEIGHT; height++) {
+			FCell** memptr = &(&cellcontainer[width])[height];
+			new(memptr) FCell(this);
 			cellcontainer[width][height].state = initFieldCellState[width][height];
 			cellcontainer[width][height].setPosition(width, height);
 
@@ -28,7 +60,6 @@ Field::Field() : cellcontainer(FIELD_WIDTH, vector<FCell>(FIELD_HEIGHT)) {
 	}
 }
 
-Field::Field() 
 
 void Field::draw() {
 	int draw_pos_x;

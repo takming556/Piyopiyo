@@ -68,6 +68,7 @@ public:
 	FCell* lefter;
 	bool VanishScheduledFlag;
 	FCell(Field* given_master_field_ptr);
+	FCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setPosition(int given_x, int given_y);
 };

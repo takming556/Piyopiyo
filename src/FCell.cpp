@@ -12,12 +12,15 @@ FCell::FCell(Field* given_master_field_ptr) {
 	master_field = given_master_field_ptr;
 	state = VACANT;
 	setPosition(-1, -1);
-	//master_field = nullptr;
+	master_field = given_master_field_ptr;
 	upper = nullptr;
 	righter = nullptr;
 	downer = nullptr;
 	lefter = nullptr;
 	VanishScheduledFlag = false;
+}
+
+FCell::FCell() {
 }
 
 void FCell::draw(int draw_pos_pxl_x, int draw_pos_pxl_y) {
