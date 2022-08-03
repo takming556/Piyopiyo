@@ -136,6 +136,7 @@ public:
 	void deal_clockkeeper();
 	void deal_keyinput();
 	bool check_Piece_landing();
+	void copy_Piece_to_Field();
 };
 
 class SceneManager {

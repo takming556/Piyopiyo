@@ -26,7 +26,12 @@ void GameSession::deal_clockkeeper() {
 	float piyodropwait = 1.0 / piyodropfreq;
 	if (GetNowCount() >= clockkeeper + piyodropwait * 1000) {
 		clockkeeper = GetNowCount();
-		piece.drop_onestep();
+		if (check_Piece_landing() == true) {
+			copy_Piece_to_Field();
+		}
+		else {
+			piece.drop_onestep();
+		}
 	}
 }
 
@@ -72,5 +77,14 @@ void GameSession::deal_keyinput() {
 }
 
 bool GameSession::check_Piece_landing() {
-	
+	if (piece.inner.downer->state != VACANT || piece.outer.downer->state != VACANT) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void GameSession::copy_Piece_to_Field() {
+	piece.inner.Position
 }

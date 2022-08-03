@@ -32,7 +32,7 @@ void Piece::draw() {
 	outer.draw(FIELD_POS_PXL_X + CELL_WIDTH * outer.Position[0], FIELD_POS_PXL_Y + CELL_HEIGHT * outer.Position[1]);
 }
 
-void Piece::drop_onestep() {
+void Piece::drop_onestep() { //Pieceを1段落とす
 	Position += downward;
 	inner.Position += downward;
 	outer.Position += downward;
@@ -40,7 +40,7 @@ void Piece::drop_onestep() {
 	outer.setSurrounder(outer.Position);
 }
 
-void Piece::move_right() {
+void Piece::move_right() { //Pieceを右に動かす
 	Position += rightward;
 	inner.Position += rightward;
 	outer.Position += rightward;
@@ -48,7 +48,7 @@ void Piece::move_right() {
 	outer.setSurrounder(outer.Position);
 }
 
-void Piece::move_left() {
+void Piece::move_left() { //Pieceを左に動かす
 	Position += leftward;
 	inner.Position += leftward;
 	outer.Position += leftward;
@@ -56,7 +56,7 @@ void Piece::move_left() {
 	outer.setSurrounder(outer.Position);
 }
 
-void Piece::rotate_forwardclockwise() {
+void Piece::rotate_forwardclockwise() { //Pieceを順時計回りに回す
 	compass++;
 	//compass += 1;
 	//compass = compass + 1;
@@ -64,7 +64,7 @@ void Piece::rotate_forwardclockwise() {
 	outer.setSurrounder(outer.Position);
 }
 
-void Piece::rotate_counterclockwise() {
+void Piece::rotate_counterclockwise() { //Pieceを反時計回りに回す
 	compass--;
 	//compass -= 1;
 	//compass = compass - 1;
@@ -72,7 +72,7 @@ void Piece::rotate_counterclockwise() {
 	outer.setSurrounder(outer.Position);
 }
 
-void Piece::setPosition(int given_x, int given_y) {
+void Piece::setPosition(int given_x, int given_y) { //与えられたx,y座標にPieceのPositionをセットする
 	valarray<int> newPosition = { given_x, given_y };
 	Position = newPosition;
 	inner.setPosition(newPosition);
