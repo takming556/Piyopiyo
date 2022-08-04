@@ -28,6 +28,7 @@ void GameSession::deal_clockkeeper() {
 		clockkeeper = GetNowCount();
 		if (check_Piece_landing() == true) {
 			copy_Piece_to_Field();
+			piece.reset();
 		}
 		else {
 			piece.drop_onestep();
@@ -60,7 +61,7 @@ void GameSession::deal_keyinput() {
 	//左矢印キー
 	if (KeyPushFlag_Left == false && keybuf[KEY_INPUT_LEFT] == 1) {
 		KeyPushFlag_Left = true;
-		piece.move_left();
+		piece.consider_move_left();
 	}
 	else if (KeyPushFlag_Left == true && keybuf[KEY_INPUT_LEFT] == 0) {
 		KeyPushFlag_Left = false;
@@ -69,7 +70,7 @@ void GameSession::deal_keyinput() {
 	//右矢印キー
 	if (KeyPushFlag_Right == false && keybuf[KEY_INPUT_RIGHT] == 1) {
 		KeyPushFlag_Right = true;
-		piece.move_right();
+		piece.consider_move_right();
 	}
 	else if (KeyPushFlag_Right == true && keybuf[KEY_INPUT_RIGHT] == 0) {
 		KeyPushFlag_Right = false;
@@ -86,5 +87,10 @@ bool GameSession::check_Piece_landing() {
 }
 
 void GameSession::copy_Piece_to_Field() {
-	piece.inner.Position
+	FCell* field_inner = field.getFCellptr(piece.inner.Position);
+	FCell* field_outer = field.getFCellptr(piece.outer.Position);
+	field_inner->state = piece.inner.state;
+	field_outer->state = piece.outer.state;
+	field_inner->setSurrounder(field_inner->Position);
+	field_outer->setSurrounder(field_outer->Position);
 }

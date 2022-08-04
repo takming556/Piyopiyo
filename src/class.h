@@ -71,6 +71,7 @@ public:
 	FCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setPosition(int given_x, int given_y);
+	void setSurrounder(valarray<int> given_position);
 };
 
 class PCell {
@@ -92,10 +93,10 @@ public:
 	void setSurrounder(valarray<int> given_position);
 };
 
-class Container {
-	FCell** fcells;
-	Container(Field* given_master_field);
-};
+//class Container {
+//	FCell** fcells;
+//	Container(Field* given_master_field);
+//};
 
 class Field {
 public:
@@ -117,10 +118,13 @@ public:
 	//Piece();
 	void draw();
 	void drop_onestep();
+	void consider_move_right();
+	void consider_move_left();
 	void move_right();
 	void move_left();
 	void rotate_forwardclockwise();
 	void rotate_counterclockwise();
+	void reset();
 	void setPosition(int given_x, int given_y);
 };
 

@@ -40,6 +40,18 @@ void Piece::drop_onestep() { //PieceÇ1íióéÇ∆Ç∑
 	outer.setSurrounder(outer.Position);
 }
 
+void Piece::consider_move_right() {
+	if (inner.righter->state == VACANT && outer.righter->state == VACANT) {
+		move_right();
+	}
+}
+
+void Piece::consider_move_left() {
+	if (inner.lefter->state == VACANT && outer.lefter->state == VACANT) {
+		move_left();
+	}
+}
+
 void Piece::move_right() { //PieceÇâEÇ…ìÆÇ©Ç∑
 	Position += rightward;
 	inner.Position += rightward;
@@ -77,4 +89,15 @@ void Piece::setPosition(int given_x, int given_y) { //ó^Ç¶ÇÁÇÍÇΩx,yç¿ïWÇ…PieceÇÃ
 	Position = newPosition;
 	inner.setPosition(newPosition);
 	outer.setPosition(newPosition, compass.direction);
+}
+
+void Piece::reset() {
+	compass = INITIAL_PIECE_DIRECTION;
+	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
+	inner.setPosition(Position);
+	outer.setPosition(Position, compass.direction);
+	inner.setSurrounder(inner.Position);
+	outer.setSurrounder(outer.Position);
+	inner.setRandomState();
+	outer.setRandomState();
 }
