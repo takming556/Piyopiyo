@@ -93,4 +93,9 @@ void GameSession::copy_Piece_to_Field() {
 	field_outer->state = piece.outer.state;
 	field_inner->setSurrounder(field_inner->Position);
 	field_outer->setSurrounder(field_outer->Position);
+
+	//piece.inner.standingFCell->state = piece.inner.state;
+	//piece.outer.standingFCell->state = piece.outer.state;
+	//piece.inner.standingFCell->setSurrounder(piece.inner.standingFCell->Position);
+	//piece.inner.standingFCell->setSurrounder(piece.inner.standingFCell->Position);
 }

@@ -60,8 +60,20 @@ void FCell::setPosition(int given_x, int given_y) {
 	Position = newPosition;
 }
 void FCell::setSurrounder(valarray<int> givenPosition) {
-	upper = master_field->getFCellptr(givenPosition + upward);
-	righter = master_field->getFCellptr(givenPosition + rightward);
-	downer = master_field->getFCellptr(givenPosition + downward);
-	lefter = master_field->getFCellptr(givenPosition + leftward);
+	if (givenPosition[Dimension::Y] == 0)upper = nullptr;
+	else upper = master_field->getFCellptr(givenPosition + upward);
+
+	if (givenPosition[Dimension::X] == FIELD_WIDTH - 1)righter = nullptr;
+	else righter = master_field->getFCellptr(givenPosition + rightward);
+
+	if (givenPosition[Dimension::Y] == FIELD_HEIGHT - 1)downer = nullptr;
+	else downer = master_field->getFCellptr(givenPosition + downward);
+
+	if (givenPosition[Dimension::X] == 0)lefter = nullptr;
+	else lefter = master_field->getFCellptr(givenPosition + leftward);
+
+	//upper = master_field->getFCellptr(givenPosition + upward);
+	//righter = master_field->getFCellptr(givenPosition + rightward);
+	//downer = master_field->getFCellptr(givenPosition + downward);
+	//lefter = master_field->getFCellptr(givenPosition + leftward);
 }

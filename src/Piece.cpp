@@ -4,7 +4,7 @@
 #include "enums.h"
 #include "class.h"
 
-Piece::Piece(Field* given_master_field_ptr) : inner(this), outer(this) {
+Piece::Piece(Field* given_master_field_ptr) : inner(this), outer(this) { //コンストラクタ
 	master_field = given_master_field_ptr;
 	compass = INITIAL_PIECE_DIRECTION;
 	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
@@ -14,6 +14,16 @@ Piece::Piece(Field* given_master_field_ptr) : inner(this), outer(this) {
 	//outer.master_piece = this;
 	inner.setSurrounder(inner.Position);
 	outer.setSurrounder(outer.Position);
+}
+
+Piece::Piece(const Piece& original) : inner(original), outer(original) { //コピーコンストラクタ
+	master_field = original.master_field;
+	compass = original.compass;
+	Position = original.Position;
+	inner.setPosition(original.Position);
+	outer.setPosition(original.Position, original.compass.direction);
+	inner.setSurrounder(original.inner.Position);
+	outer.setSurrounder(original.outer.Position);
 }
 
 //Piece::Piece() {
@@ -66,6 +76,16 @@ void Piece::move_left() { //Pieceを左に動かす
 	outer.Position += leftward;
 	inner.setSurrounder(inner.Position);
 	outer.setSurrounder(outer.Position);
+}
+
+void Piece::consider_rotate_forwardclockwise() {
+	//Piece i(*this);
+	//i.rotate_forwardclockwise();
+	//if(i.inner.)
+}
+
+void Piece::consider_rotate_counterclockwise() {
+
 }
 
 void Piece::rotate_forwardclockwise() { //Pieceを順時計回りに回す

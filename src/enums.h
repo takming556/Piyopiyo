@@ -27,6 +27,5 @@ enum Direction {
 
 enum Dimension {
 	X,
-	Y,
-	Z
+	Y
 };

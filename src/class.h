@@ -83,7 +83,9 @@ public:
 	FCell* righter;
 	FCell* downer;
 	FCell* lefter;
+	FCell* standingFCell;
 	PCell(Piece* given_master_piece_ptr);
+	PCell(const Piece& given_master_piece_ptr);
 	//PCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setRandomState();
@@ -115,6 +117,7 @@ public:
 	PCell outer;
 	Field* master_field;
 	Piece(Field* given_master_field_ptr);
+	Piece(const Piece& original);
 	//Piece();
 	void draw();
 	void drop_onestep();
@@ -122,6 +125,8 @@ public:
 	void consider_move_left();
 	void move_right();
 	void move_left();
+	void consider_rotate_forwardclockwise();
+	void consider_rotate_counterclockwise();
 	void rotate_forwardclockwise();
 	void rotate_counterclockwise();
 	void reset();

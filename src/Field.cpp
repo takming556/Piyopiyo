@@ -95,7 +95,7 @@ void Field::draw() {
 }
 
 FCell* Field::getFCellptr(valarray<int> givenPosition) {
-	int given_x = givenPosition[0];
-	int given_y = givenPosition[1];
-	return &cellcontainer[given_x][given_y];
+	//int given_x = givenPosition[0];
+	//int given_y = givenPosition[1];
+	return &cellcontainer[givenPosition[Dimension::X]][givenPosition[Dimension::Y]];
 }

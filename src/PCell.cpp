@@ -14,6 +14,13 @@ PCell::PCell(Piece* given_master_piece_ptr) {
 	setPosition(-1, -1);
 }
 
+PCell::PCell(const Piece& given_master_piece_ptr) {
+	master_piece = given_master_piece_ptr;
+	setRandomState();
+	setPosition(-1, -1);
+}
+
+
 //PCell::PCell() {
 //	setRandomState();
 //}
@@ -104,8 +111,22 @@ void PCell::setPosition(valarray<int> basePosition, Direction given_direction) {
 }
 
 void PCell::setSurrounder(valarray<int> givenPosition) {
-	upper = master_piece->master_field->getFCellptr(givenPosition + upward);
-	righter = master_piece->master_field->getFCellptr(givenPosition + rightward);
-	downer = master_piece->master_field->getFCellptr(givenPosition + downward);
-	lefter = master_piece->master_field->getFCellptr(givenPosition + leftward);
+	if (givenPosition[Dimension::Y] == 0)upper = nullptr;
+	else upper = master_piece->master_field->getFCellptr(givenPosition + upward);
+	
+	if (givenPosition[Dimension::X] == FIELD_WIDTH - 1)righter = nullptr;
+	else righter = master_piece->master_field->getFCellptr(givenPosition + rightward);
+
+	if (givenPosition[Dimension::Y] == FIELD_HEIGHT - 1)downer = nullptr;
+	else downer = master_piece->master_field->getFCellptr(givenPosition + downward);
+
+	if (givenPosition[Dimension::X] == 0)lefter = nullptr;
+	else lefter = master_piece->master_field->getFCellptr(givenPosition + leftward);
+
+
+	//upper = master_piece->master_field->getFCellptr(givenPosition + upward);
+	//righter = master_piece->master_field->getFCellptr(givenPosition + rightward);
+	//downer = master_piece->master_field->getFCellptr(givenPosition + downward);
+	//lefter = master_piece->master_field->getFCellptr(givenPosition + leftward);
+	standingFCell = master_piece->master_field->getFCellptr(givenPosition);
 }
