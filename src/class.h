@@ -85,7 +85,7 @@ public:
 	FCell* lefter;
 	FCell* standingFCell;
 	PCell(Piece* given_master_piece_ptr);
-	PCell(const Piece& given_master_piece_ptr);
+	PCell(Piece& given_master_piece_ptr);
 	//PCell();
 	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
 	void setRandomState();

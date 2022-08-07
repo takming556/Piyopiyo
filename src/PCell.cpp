@@ -14,8 +14,8 @@ PCell::PCell(Piece* given_master_piece_ptr) {
 	setPosition(-1, -1);
 }
 
-PCell::PCell(const Piece& given_master_piece_ptr) {
-	master_piece = given_master_piece_ptr;
+PCell::PCell(Piece& given_master_piece_ptr) {
+	master_piece = &given_master_piece_ptr;
 	setRandomState();
 	setPosition(-1, -1);
 }
