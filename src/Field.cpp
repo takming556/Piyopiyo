@@ -1,4 +1,3 @@
-#include <new>
 #include "DxLib.h"
 #include "externs.h"
 #include "consts.h"
@@ -6,96 +5,31 @@
 #include "class.h"
 
 
-//Field::Field() : cellcontainer(FIELD_WIDTH, vector<FCell>(FIELD_HEIGHT)) {
-//	for (int width = 0; width < FIELD_WIDTH; width++) {
-//		for (int height = 0; height < FIELD_HEIGHT; height++) {
-//			cellcontainer[width][height].state = initFieldCellState[width][height];
-//			cellcontainer[width][height].setPosition(width, height);
-//
-//			cellcontainer[width][height].master_field = this;
-//
-//			if (height == 0) cellcontainer[width][height].upper = nullptr;
-//			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
-//
-//			if (width == FIELD_WIDTH - 1) cellcontainer[width][height].righter = nullptr;
-//			else cellcontainer[width][height].righter = &cellcontainer[width + 1][height];
-//
-//			if (height == FIELD_HEIGHT - 1) cellcontainer[width][height].downer = nullptr;
-//			else cellcontainer[width][height].downer = &cellcontainer[width][height - 1];
-//
-//			if (width == 0) cellcontainer[width][height].lefter = nullptr;
-//			else cellcontainer[width][height].lefter = &cellcontainer[width - 1][height];
-//		}
-//	}
-//}
-
 Field::Field() {
-	//2次元配列cellcontainerを動的確保
-	cellcontainer = new FCell * [FIELD_WIDTH];
-	for (int i = 0; i < FIELD_WIDTH; ++i) {
-		cellcontainer[i] = new FCell[FIELD_HEIGHT];
-	}
-
-	for (int width = 0; width < FIELD_WIDTH; width++) {
-		for (int height = 0; height < FIELD_HEIGHT; height++) {
-			//FCell** memptr = &(&cellcontainer[width])[height];
-			//new(memptr) FCell(this);
-
-			cellcontainer[width][height].master_field = this;
-			cellcontainer[width][height].state = initFieldCellState[width][height];
-			cellcontainer[width][height].VanishScheduledFlag = false;
-			cellcontainer[width][height].setPosition(width, height);
-
-
-			//cellcontainer[width][height].state = initFieldCellState[width][height];
-
-			//cellcontainer[width][height].master_field = this;
-
-			if (height == 0) cellcontainer[width][height].upper = nullptr;
-			else cellcontainer[width][height].upper = &cellcontainer[width][height - 1];
-
-			if (width == FIELD_WIDTH - 1) cellcontainer[width][height].righter = nullptr;
-			else cellcontainer[width][height].righter = &cellcontainer[width + 1][height];
-
-			if (height == FIELD_HEIGHT - 1) cellcontainer[width][height].downer = nullptr;
-			else cellcontainer[width][height].downer = &cellcontainer[width][height - 1];
-
-			if (width == 0) cellcontainer[width][height].lefter = nullptr;
-			else cellcontainer[width][height].lefter = &cellcontainer[width - 1][height];
+	for (int x = 0; x < FIELD_WIDTH; x++) {
+		vector<Fcell> v;
+		for (int y = 0; y < FIELD_HEIGHT; y++) {
+			valarray<int> pos{ x,y };
+			Fcell fcell(*this, Fcell::INITIAL_FCELL_STATES[x][y], pos);
+			v.push_back(fcell);
 		}
+		fcell_matrix.push_back(v);
 	}
 }
 
-//Field::Field() {
-//	cellcontainer = new FCell * [FIELD_WIDTH];
-//	for (int i = 0; i < FIELD_WIDTH; ++i) {
-//		cellcontainer[i] = new FCell[FIELD_HEIGHT];
-//	}
-//
-//	for (int width = 0; width < FIELD_WIDTH; ++width) {
-//		for (int height = 0; height < FIELD_HEIGHT; ++height) {
-//			cellcontainer[width][height].state = initFieldCellState[width][height];
-//			cellcontainer[width][height].setPosition(width, height);
-//			cellcontainer[width][height].VanishScheduledFlag = false;
-//		}
-//	}
-//}
+
+Fcell& Field::get_fcell(valarray<int> given_position) {
+	return fcell_matrix.at(given_position[Dimension::X]).at(given_position[Dimension::Y]);
+}
 
 
 void Field::draw() {
-	int draw_pos_x;
-	int draw_pos_y;
-	for (unsigned int y = 0; y < FIELD_HEIGHT; y++) {
-		for (unsigned int x = 0; x < FIELD_WIDTH; x++) {
-			draw_pos_x = FIELD_POS_PXL_X + CELL_WIDTH * x;
-			draw_pos_y = FIELD_POS_PXL_Y + CELL_WIDTH * y;
-			cellcontainer[x][y].draw(draw_pos_x, draw_pos_y);
+	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
+	for (int y = 0; y < FIELD_HEIGHT; y++) {
+		for (int x = 0; x < FIELD_WIDTH; x++) {
+			int draw_pos_x = FIELD_DRAWPOS_PXL_X + Fcell::FCELL_WIDTH * x;
+			int draw_pos_y = FIELD_DRAWPOS_PXL_Y + Fcell::FCELL_WIDTH * y;
+			fcell_matrix.at(x).at(y).draw(draw_pos_x, draw_pos_y);
 		}
 	}
-}
-
-FCell* Field::getFCellptr(valarray<int> givenPosition) {
-	//int given_x = givenPosition[0];
-	//int given_y = givenPosition[1];
-	return &cellcontainer[givenPosition[Dimension::X]][givenPosition[Dimension::Y]];
 }

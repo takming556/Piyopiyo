@@ -1,24 +1,5 @@
 #pragma once
 
-//プロトタイプ宣言
-enum State;
-enum Scene;
-
-//extern宣言
-extern enum Scene scene;              //現在のゲームシーンが格納される
-
-//キー押下フラグたち
-extern bool KeyPushFlag_Up;
-extern bool KeyPushFlag_Down;
-extern bool KeyPushFlag_Left;
-extern bool KeyPushFlag_Right;
-extern bool KeyPushFlag_Z;
-extern bool KeyPushFlag_X;
-extern bool KeyPushFlag_Space;
-extern bool KeyPushFlag_Enter;
-
-////状態を表すフラグたち
-//extern bool NowVanishingFlag;
 
 //グラフィックハンドルたち
 extern int hImg_title;
@@ -35,14 +16,4 @@ extern int hImg_vacant_piece;
 extern int hImg_outside;
 extern int hImg_explode;
 extern int hImg_num[10];
-//extern int hImg_num0;
-//extern int hImg_num1;
-//extern int hImg_num2;
-//extern int hImg_num3;
-//extern int hImg_num4;
-//extern int hImg_num5;
-//extern int hImg_num6;
-//extern int hImg_num7;
-//extern int hImg_num8;
-//extern int hImg_num9;
 extern int hImg_cursor;

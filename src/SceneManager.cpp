@@ -4,28 +4,37 @@
 #include "enums.h"
 #include "class.h"
 
-SceneManager::SceneManager() {
-	scene = TITLE;
+SceneManager::SceneManager() :
+	game_session(nullptr),
+	scene(Scene::TITLE),
+	is_enter_key_pushed(false)
+{
 }
+
+
+SceneManager::~SceneManager() {
+	delete game_session;
+}
+
 
 void SceneManager::patrol() {
 	switch (scene) {
 	case TITLE:
-		DrawRotaGraph(RES_SCR_X / 2 - 1, RES_SCR_Y / 2 - 1, 0.71, 0, hImg_title, TRUE);
-		if (KeyPushFlag_Enter == false && CheckHitKey(KEY_INPUT_RETURN) == TRUE) {
-			KeyPushFlag_Enter = true;
-			game_session = initGame();
+		DrawRotaGraph(SCREEN_RESOLUTION_X / 2 - 1, SCREEN_RESOLUTION_Y / 2 - 1, 0.71, 0, hImg_title, TRUE);
+		if (is_enter_key_pushed == false && CheckHitKey(KEY_INPUT_RETURN) == TRUE) {
+			is_enter_key_pushed = true;
+			initialize_scene_game();
 		}
 		break;
 	case GAME:
-		game_session.patrol();
+		game_session->patrol();
 		break;
 	}
 }
 
-GameSession SceneManager::initGame() {
-	KeyPushFlag_Enter = false;
+
+void SceneManager::initialize_scene_game() {
+	is_enter_key_pushed = false;
 	scene = GAME;
-	GameSession gs;
-	return gs;
+	game_session = new GameSession();
 }

@@ -14,14 +14,16 @@ void LoadAllGraph();
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	ChangeWindowMode(TRUE);            //ウィンドウ表示 入/切
 	SetMainWindowText("PIYOPIYO");
-	SetGraphMode(RES_SCR_X, RES_SCR_Y, 32);  //画面解像度1024x768, 24ビットカラーに設定
+	SetGraphMode(SCREEN_RESOLUTION_X, SCREEN_RESOLUTION_Y, 32);  //画面解像度, 色深度を設定
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
 	DxLib_Init();                      //DXライブラリ初期化処理
 	SetDrawScreen(DX_SCREEN_BACK);     //描画先を裏画面に設定
 
 	LoadAllGraph();
+
+
 	SceneManager scenemanager;
-	//initTitle();
+
 
 	while (true) {
 		if (ProcessMessage() != 0)break; //ウィンドウの閉じるボタンが押下されるとwhile無限ループを抜ける
@@ -35,23 +37,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 }
 
-//void initTitle() {
-//	PlayMusic("sound/hoge.mp3", DX_PLAYTYPE_BACK);
-//	SetVolumeMusic(96);
-//	gamescene = TITLE;
-//}
-
-void onInstruction() {
-
-}
-
-void onGameover() {
-
-}
-
-void onResult() {
-
-}
 
 void LoadAllGraph() {
 	hImg_title        = LoadGraph("sprite/title.png");

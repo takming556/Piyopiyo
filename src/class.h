@@ -5,120 +5,124 @@
 using std::vector;
 using std::valarray;
 
-//class Cell;
 class Field;
 class Piece;
-class FCell;
-class PCell;
+class Fcell;
+class Pcell;
 
 
 class Compass{
-public:
+private:
 	Direction direction;
+public:
 	Compass();
 	Compass(Direction given_direction);
-	void operator ++(int n);
-	void operator --(int n);
-	Compass operator ++();
-	Compass operator --();
-	void operator +=(int rotate_amount_plus);
-	void operator -=(int rotate_amount_minus);
-	Compass operator +(int rotate_amount_plus);
-	Compass operator -(int rotate_amount_minus);
-	Compass operator =(Compass righthand);
-	Compass operator =(Direction righthand);
-	bool operator ==(Compass righthand);
-	bool operator !=(Compass righthand);
-	bool operator ==(Direction righthand);
-	bool operator !=(Direction righthand);
+	Direction get_direction();
+	void set_direction(Direction given_direction);
+	void rotate_forwardclockwise();
+	void rotate_forwardclockwise(unsigned int rotate_amount);
+	void rotate_counterclockwise();
+	void rotate_counterclockwise(unsigned int rotate_amount);
+	//void operator ++(int n);
+	//void operator --(int n);
+	//Compass operator ++();
+	//Compass operator --();
+	//void operator +=(int rotate_amount_plus);
+	//void operator -=(int rotate_amount_minus);
+	//Compass operator +(int rotate_amount_plus);
+	//Compass operator -(int rotate_amount_minus);
+	//Compass operator =(Compass righthand);
+	//Compass operator =(Direction righthand);
+	//bool operator ==(Compass righthand);
+	//bool operator !=(Compass righthand);
+	//bool operator ==(Direction righthand);
+	//bool operator !=(Direction righthand);
 };
 
-//class Cell {
-//public:
-//	enum State state;
-//	valarray<int> Position;
-//	//Field* master_field;
-//	//Piece* master_piece;
-//	Cell* upper;
-//	Cell* righter;
-//	Cell* downer;
-//	Cell* lefter;
-//	bool VanishScheduledFlag;
-//	Cell();
-//	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
-//	void setRandomState();
-//	void setPosition(int given_x, int given_y);
-//	void setPosition(valarray<int> given_position);
-//	void setPosition(valarray<int> base_position, Direction given_direction);
-//	void setSurrounder(valarray<int> given_position);
-//	//Cell自身のField上での存在位置を表すメンバー変数を用意するべきだ
-//	//実装した場合、cellcontainerを初期化する際の処理が初期化子リストを使用した少々複雑なものになるかもしれない
-//	//また、Pieceの位置・向きが変動した場合にinner, outerの存在位置情報を更新する必要が出てくるだろう
-//	//面倒かもしれないが、そうすれば向きによって条件分岐することなくPieceの衝突判定が行えてあとあと苦労せずに済む可能性が高い
-//};
-
-class FCell {
-public:
-	enum State state;
-	valarray<int> Position;
-	Field* master_field;
-	FCell* upper;
-	FCell* righter;
-	FCell* downer;
-	FCell* lefter;
-	bool VanishScheduledFlag;
-	//FCell(Field* given_master_field_ptr);
-	FCell();
-	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
-	void setPosition(int given_x, int given_y);
-	void setSurrounder(valarray<int> given_position);
-};
-
-class PCell {
-public:
-	enum State state;
-	valarray<int> Position;
-	Piece* master_piece;
-	FCell* upper;
-	FCell* righter;
-	FCell* downer;
-	FCell* lefter;
-	FCell* standingFCell;
-	PCell(Piece* given_master_piece_ptr);
-	PCell(Piece& given_master_piece_ptr);
-	//PCell();
-	void draw(int draw_pos_pxl_x, int draw_pos_pxl_y);
-	void setRandomState();
-	void setPosition(int given_x, int given_y);
-	void setPosition(valarray<int> given_position);
-	void setPosition(valarray<int> base_position, Direction given_direction);
-	void setSurrounder(valarray<int> given_position);
-};
-
-//class Container {
-//	FCell** fcells;
-//	Container(Field* given_master_field);
-//};
 
 class Field {
+private:
+	vector<vector<Fcell>> fcell_matrix;
 public:
-	//vector<vector<FCell>> cellcontainer;
-	FCell** cellcontainer;
 	Field();
+	Fcell& get_fcell(valarray<int> given_position);
 	void draw();
-	FCell* getFCellptr(valarray<int> givenPosition);
+	static const unsigned int FIELD_WIDTH = 8;				//ゲームフィールドのセル幅
+	static const unsigned int FIELD_HEIGHT = 14;			//ゲームフィールドのセル高
+	static const unsigned int FIELD_DRAWPOS_PXL_X = 96;		//ゲームフィールドのピクセル位置X座標
+	static const unsigned int FIELD_DRAWPOS_PXL_Y = 48;		//ゲームフィールドのピクセル位置Y座標
 };
 
-class Piece {
+
+class Fcell {
+private:
+	Field& master_field;
+	enum State state;
+	valarray<int> position;
 public:
+	Fcell(Field& given_master_field, enum State initial_state, valarray<int> lying_position);
+	void set_state(enum State given_state);
+	//void set_position(int given_x, int given_y);
+	enum State get_state();
+	Fcell& get_upper();
+	Fcell& get_downer();
+	Fcell& get_righter();
+	Fcell& get_lefter();
+	void draw(int x, int y);
+	static const unsigned int FCELL_WIDTH = 48;		//フィールドセルのピクセル幅
+	static const unsigned int FCELL_HEIGHT = 48;	//フィールドセルのピクセル高
+	static inline const enum State INITIAL_FCELL_STATES[Field::FIELD_WIDTH][Field::FIELD_HEIGHT] = {
+					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
+					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE}
+	};
+};
+
+
+class Pcell {
+private:
+	Piece& master_piece;
+	enum State state;
+	valarray<int> position;
+public:
+	Pcell(Piece& given_master_piece, valarray<int> given_position, enum State given_state);
+	void set_state(enum State given_state);
+	//void set_state_randomly();
+	void set_position(int given_x, int given_y);
+	void set_position(valarray<int> given_position);
+	void set_position(valarray<int> base_position, Direction given_direction);
+	enum State get_state();
+	valarray<int> get_position();
+	Fcell& get_upper_fcell();
+	Fcell& get_downer_fcell();
+	Fcell& get_righter_fcell();
+	Fcell& get_lefter_fcell();
+	Fcell& get_standing_fcell();
+	void draw(int x, int y);
+	static inline const double PCELL_DRAWSIZE_EXTRATE = (double)Fcell::FCELL_WIDTH / 333 * 1.5;	// ぴよ表示サイズ倍率
+	static const int PCELL_DRAWPOS_OFFSET = 24;
+};
+
+
+class Piece {
+private:
+	Field& master_field;
 	Compass compass;
-	valarray<int> Position;
-	PCell inner;
-	PCell outer;
-	Field* master_field;
-	Piece(Field* given_master_field_ptr);
-	Piece(const Piece& original);
-	//Piece();
+	valarray<int> position;
+	Pcell inner;
+	Pcell outer;
+public:
+	Piece(Field& given_master_field, enum State given_inner_state, enum State given_outer_state);
+	//Piece(const Piece& original);
+	void set_position(valarray<int> given_position);
+	Field& get_master_field();
+	Pcell get_inner();
+	Pcell get_outer();
 	void draw();
 	void drop_onestep();
 	void consider_move_right();
@@ -129,30 +133,67 @@ public:
 	void consider_rotate_counterclockwise();
 	void rotate_forwardclockwise();
 	void rotate_counterclockwise();
-	void reset();
-	void setPosition(int given_x, int given_y);
+	void receive_next_piece(Piece given_next_piece);
+	//void set_position(int given_x, int given_y);
+	static inline const valarray<int> INITIAL_PIECE_POSITION{ 3,1 };		//Pieceの初期位置
+	static const enum Direction INITIAL_PIECE_DIRECTION = Direction::UP;	//Pieceの初期方向
+	static inline const valarray<int> INITIAL_INNER_PCELL_POSITION{ 3,1 };
+	static inline const valarray<int> INITIAL_OUTER_PCELL_POSITION{ 3,0 };
 };
+
+
+class NextPiece {
+private:
+	enum State inner;
+	enum State outer;
+public:
+	NextPiece();
+	void set_randomly();
+	enum State get_inner_state();
+	enum State get_outer_state();
+	void draw();
+	static const int NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_X = 504; //next_pieceの背景画像描画位置ピクセルX座標
+	static const int NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_Y = 96;  //next_pieceの背景画像描画位置ピクセルY座標
+	static const int NEXT_PIECE_DRAWPOS_OFFSET_PXL_X = 24;
+	static const int NEXT_PIECE_DRAWPOS_OFFSET_PXL_Y = 64;
+	static const int NEXT_PIECE_DRAWPOS_PXL_X = NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_X + NEXT_PIECE_DRAWPOS_OFFSET_PXL_X;
+	static const int NEXT_PIECE_DRAWPOS_PXL_Y = NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_Y + NEXT_PIECE_DRAWPOS_OFFSET_PXL_Y;
+};
+
 
 class GameSession {
-public:
+private:
 	Field field;
-	Piece piece;
-	int clockkeeper;
-	float piyodropfreq;
-	bool PieceLandingFlag; //このフラグが立ったら次回のclock超過時にPieceをFieldに転写せよ、転写し終わったらフラグを折れ
-	GameSession();
-	void patrol();
+	Piece* piece;
+	NextPiece next_piece;
+	int clock_keeper;
+	float piyo_drop_freq;
+	bool is_down_key_pushed;
+	bool is_left_key_pushed;
+	bool is_right_key_pushed;
+	bool is_z_key_pushed;
+	bool is_x_key_pushed;
+	bool is_game_over;
 	void deal_clockkeeper();
 	void deal_keyinput();
-	bool check_Piece_landing();
-	void copy_Piece_to_Field();
+	bool check_piece_landing();
+	void copy_piece_to_field();
+	void update_piece();
+	static const unsigned int VANISH_THRESHOLD = 4;	//ぴよ消し閾値
+public:
+	GameSession();
+	void patrol();
 };
 
+
 class SceneManager {
-public:
+private:
+	GameSession* game_session;
 	enum Scene scene;
-	GameSession game_session;
+	bool is_enter_key_pushed;
+	void initialize_scene_game();
+public:
 	SceneManager();
+	~SceneManager();
 	void patrol();
-	GameSession initGame();
 };

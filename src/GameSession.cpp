@@ -4,81 +4,93 @@
 #include "enums.h"
 #include "class.h"
 
-GameSession::GameSession() : piece(&field) {
-	clockkeeper = GetNowCount();
-	piyodropfreq = 1.0;
-	PieceLandingFlag = false;
-	//piece.master_field = &field;
+GameSession::GameSession() :
+	piece(nullptr),
+	is_down_key_pushed(false),
+	is_right_key_pushed(false),
+	is_left_key_pushed(false),
+	is_z_key_pushed(false),
+	is_x_key_pushed(false),
+	is_game_over(false),
+	piyo_drop_freq(1.0)
+{
+	clock_keeper = GetNowCount();
+	next_piece.set_randomly();
+	piece = new Piece(field, next_piece.get_inner_state(), next_piece.get_outer_state());
+	next_piece.set_randomly();
 }
+
 
 void GameSession::patrol() {
 	DrawGraph(0, 0, hImg_background, TRUE); //背景画像を表示
-	DrawGraph(144, 96, hImg_field, FALSE);  //ゲームフィールドの画像を表示
-	DrawGraph(NEXTPIYO_POS_PXL_X, NEXTPIYO_POS_PXL_Y, hImg_nextframe, FALSE); //Nextぴよピース枠を表示
-	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
 	field.draw();
-	piece.draw();
+	piece->draw();
+	next_piece.draw();
+	DrawFormatString(0, 740, GetColor(255, 255, 0), "←→でぴよ移動　Zで左回転　Xで右回転");
 	deal_keyinput();
 	deal_clockkeeper();
 }
 
+
 void GameSession::deal_clockkeeper() {
-	float piyodropwait = 1.0 / piyodropfreq;
-	if (GetNowCount() >= clockkeeper + piyodropwait * 1000) {
-		clockkeeper = GetNowCount();
-		if (check_Piece_landing() == true) {
-			copy_Piece_to_Field();
-			piece.reset();
+	float piyodropwait = 1.0 / piyo_drop_freq;
+	if (GetNowCount() >= clock_keeper + piyodropwait * 1000) {
+		clock_keeper = GetNowCount();
+		if (check_piece_landing() == true) {
+			copy_piece_to_field();
+			update_piece();
 		}
 		else {
-			piece.drop_onestep();
+			piece->drop_onestep();
 		}
 	}
 }
+
 
 void GameSession::deal_keyinput() {
 	char keybuf[256];
 	GetHitKeyStateAll(keybuf);
 
 	//Zキー
-	if (KeyPushFlag_Z == false && keybuf[KEY_INPUT_Z] == 1) {
-		KeyPushFlag_Z = true;
-		piece.rotate_counterclockwise();
+	if (is_z_key_pushed == false && keybuf[KEY_INPUT_Z] == 1) {
+		is_z_key_pushed = true;
+		piece->rotate_counterclockwise();
 	}
-	else if (KeyPushFlag_Z == true && keybuf[KEY_INPUT_Z] == 0) {
-		KeyPushFlag_Z = false;
+	else if (is_z_key_pushed == true && keybuf[KEY_INPUT_Z] == 0) {
+		is_z_key_pushed = false;
 	}
 
 	//Xキー
-	if (KeyPushFlag_X == false && keybuf[KEY_INPUT_X] == 1) {
-		KeyPushFlag_X = true;
-		piece.rotate_forwardclockwise();
+	if (is_x_key_pushed == false && keybuf[KEY_INPUT_X] == 1) {
+		is_x_key_pushed = true;
+		piece->rotate_forwardclockwise();
 	}
-	else if (KeyPushFlag_X == true && keybuf[KEY_INPUT_X] == 0) {
-		KeyPushFlag_X = false;
+	else if (is_x_key_pushed == true && keybuf[KEY_INPUT_X] == 0) {
+		is_x_key_pushed = false;
 	}
 
 	//左矢印キー
-	if (KeyPushFlag_Left == false && keybuf[KEY_INPUT_LEFT] == 1) {
-		KeyPushFlag_Left = true;
-		piece.consider_move_left();
+	if (is_left_key_pushed == false && keybuf[KEY_INPUT_LEFT] == 1) {
+		is_left_key_pushed = true;
+		piece->consider_move_left();
 	}
-	else if (KeyPushFlag_Left == true && keybuf[KEY_INPUT_LEFT] == 0) {
-		KeyPushFlag_Left = false;
+	else if (is_left_key_pushed == true && keybuf[KEY_INPUT_LEFT] == 0) {
+		is_left_key_pushed = false;
 	}
 
 	//右矢印キー
-	if (KeyPushFlag_Right == false && keybuf[KEY_INPUT_RIGHT] == 1) {
-		KeyPushFlag_Right = true;
-		piece.consider_move_right();
+	if (is_right_key_pushed == false && keybuf[KEY_INPUT_RIGHT] == 1) {
+		is_right_key_pushed = true;
+		piece->consider_move_right();
 	}
-	else if (KeyPushFlag_Right == true && keybuf[KEY_INPUT_RIGHT] == 0) {
-		KeyPushFlag_Right = false;
+	else if (is_right_key_pushed == true && keybuf[KEY_INPUT_RIGHT] == 0) {
+		is_right_key_pushed = false;
 	}
 }
 
-bool GameSession::check_Piece_landing() {
-	if (piece.inner.downer->state != VACANT || piece.outer.downer->state != VACANT) {
+
+bool GameSession::check_piece_landing() {
+	if (piece->get_inner().get_downer_fcell().get_state() != VACANT || piece->get_outer().get_downer_fcell().get_state() != VACANT) {
 		return true;
 	}
 	else {
@@ -86,16 +98,17 @@ bool GameSession::check_Piece_landing() {
 	}
 }
 
-void GameSession::copy_Piece_to_Field() {
-	FCell* field_inner = field.getFCellptr(piece.inner.Position);
-	FCell* field_outer = field.getFCellptr(piece.outer.Position);
-	field_inner->state = piece.inner.state;
-	field_outer->state = piece.outer.state;
-	field_inner->setSurrounder(field_inner->Position);
-	field_outer->setSurrounder(field_outer->Position);
 
-	//piece.inner.standingFCell->state = piece.inner.state;
-	//piece.outer.standingFCell->state = piece.outer.state;
-	//piece.inner.standingFCell->setSurrounder(piece.inner.standingFCell->Position);
-	//piece.inner.standingFCell->setSurrounder(piece.inner.standingFCell->Position);
+void GameSession::copy_piece_to_field() {
+	Fcell& inner_standing_fcell = field.get_fcell(piece->get_inner().get_position());
+	Fcell& outer_standing_fcell = field.get_fcell(piece->get_outer().get_position());
+	inner_standing_fcell.set_state(piece->get_inner().get_state());
+	outer_standing_fcell.set_state(piece->get_outer().get_state());
+}
+
+
+void GameSession::update_piece() {
+	delete piece;
+	piece = new Piece(field, next_piece.get_inner_state(), next_piece.get_outer_state());
+	next_piece.set_randomly();
 }

@@ -4,79 +4,91 @@
 #include "enums.h"
 #include "class.h"
 
-Piece::Piece(Field* given_master_field_ptr) : inner(this), outer(this) { //コンストラクタ
-	master_field = given_master_field_ptr;
-	compass = INITIAL_PIECE_DIRECTION;
-	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
-	inner.setPosition(Position);
-	outer.setPosition(Position, compass.direction);
-	//inner.master_piece = this;
-	//outer.master_piece = this;
-	inner.setSurrounder(inner.Position);
-	outer.setSurrounder(outer.Position);
+
+Piece::Piece(Field& given_master_field, enum State given_inner_state, enum State given_outer_state) :	//コンストラクタ
+	inner(*this, INITIAL_INNER_PCELL_POSITION, given_inner_state),
+	outer(*this, INITIAL_OUTER_PCELL_POSITION, given_outer_state),
+	master_field(given_master_field),
+	compass(INITIAL_PIECE_DIRECTION),
+	position(INITIAL_PIECE_POSITION)
+{
 }
 
-Piece::Piece(const Piece& original) : inner(original), outer(original) { //コピーコンストラクタ
-	master_field = original.master_field;
-	compass = original.compass;
-	Position = original.Position;
-	inner.setPosition(original.Position);
-	outer.setPosition(original.Position, original.compass.direction);
-	inner.setSurrounder(original.inner.Position);
-	outer.setSurrounder(original.outer.Position);
-}
 
-//Piece::Piece() {
-//	compass = INITIAL_PIECE_DIRECTION;
-//	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
-//	inner.setPosition(Position);
-//	outer.setPosition(Position, compass.direction);
-//	inner.master_piece = this;
-//	outer.master_piece = this;
-//	inner.setSurrounder(inner.Position);
-//	outer.setSurrounder(outer.Position);
+//Piece::Piece(const Piece& original) :
+//	inner(original.inner.master_piece, original.inner.position)
+//{	//コピーコンストラクタ
+//	inner = original.inner.
+//	master_field = original.master_field;
+//	compass = original.compass;
+//	position = original.position;
 //}
 
-void Piece::draw() {
-	inner.draw(FIELD_POS_PXL_X + CELL_WIDTH * inner.Position[0], FIELD_POS_PXL_Y + CELL_HEIGHT * inner.Position[1]);
-	outer.draw(FIELD_POS_PXL_X + CELL_WIDTH * outer.Position[0], FIELD_POS_PXL_Y + CELL_HEIGHT * outer.Position[1]);
+
+void Piece::set_position(valarray<int> given_position) {
+	position = given_position;
+	inner.set_position(given_position);
+	outer.set_position(given_position, compass.get_direction());
 }
+
+
+Field& Piece::get_master_field() {
+	return master_field;
+}
+
+
+Pcell Piece::get_inner() {
+	return inner;
+}
+
+
+Pcell Piece::get_outer() {
+	return outer;
+}
+
+
+void Piece::draw() {
+	valarray<int> inner_position = inner.get_position();
+	valarray<int> outer_position = outer.get_position();
+	inner.draw(Field::FIELD_DRAWPOS_PXL_X + Fcell::FCELL_WIDTH * inner_position[Dimension::X], Field::FIELD_DRAWPOS_PXL_Y + Fcell::FCELL_HEIGHT * inner_position[Dimension::Y]);
+	outer.draw(Field::FIELD_DRAWPOS_PXL_X + Fcell::FCELL_WIDTH * outer_position[Dimension::X], Field::FIELD_DRAWPOS_PXL_Y + Fcell::FCELL_HEIGHT * outer_position[Dimension::Y]);
+}
+
 
 void Piece::drop_onestep() { //Pieceを1段落とす
-	Position += downward;
-	inner.Position += downward;
-	outer.Position += downward;
-	inner.setSurrounder(inner.Position);
-	outer.setSurrounder(outer.Position);
+	position += downward;
+	inner.set_position(inner.get_position() += downward);
+	outer.set_position(outer.get_position() += downward);
 }
 
+
 void Piece::consider_move_right() {
-	if (inner.righter->state == VACANT && outer.righter->state == VACANT) {
+	if (inner.get_righter_fcell().get_state() == State::VACANT && outer.get_righter_fcell().get_state() == State::VACANT) {
 		move_right();
 	}
 }
 
+
 void Piece::consider_move_left() {
-	if (inner.lefter->state == VACANT && outer.lefter->state == VACANT) {
+	if (inner.get_lefter_fcell().get_state() == State::VACANT && outer.get_lefter_fcell().get_state() == State::VACANT) {
 		move_left();
 	}
 }
 
+
 void Piece::move_right() { //Pieceを右に動かす
-	Position += rightward;
-	inner.Position += rightward;
-	outer.Position += rightward;
-	inner.setSurrounder(inner.Position);
-	outer.setSurrounder(outer.Position);
+	position += rightward;
+	inner.set_position(inner.get_position() + rightward);
+	outer.set_position(outer.get_position() + rightward);
 }
 
+
 void Piece::move_left() { //Pieceを左に動かす
-	Position += leftward;
-	inner.Position += leftward;
-	outer.Position += leftward;
-	inner.setSurrounder(inner.Position);
-	outer.setSurrounder(outer.Position);
+	position += leftward;
+	inner.set_position(inner.get_position() + leftward);
+	outer.set_position(outer.get_position() + leftward);
 }
+
 
 void Piece::consider_rotate_forwardclockwise() {
 	//Piece i(*this);
@@ -84,40 +96,27 @@ void Piece::consider_rotate_forwardclockwise() {
 	//if(i.inner.)
 }
 
+
 void Piece::consider_rotate_counterclockwise() {
 
 }
 
+
 void Piece::rotate_forwardclockwise() { //Pieceを順時計回りに回す
-	compass++;
-	//compass += 1;
-	//compass = compass + 1;
-	outer.setPosition(inner.Position, compass.direction);
-	outer.setSurrounder(outer.Position);
+	compass.rotate_forwardclockwise();
+	outer.set_position(inner.get_position(), compass.get_direction());
 }
+
 
 void Piece::rotate_counterclockwise() { //Pieceを反時計回りに回す
-	compass--;
-	//compass -= 1;
-	//compass = compass - 1;
-	outer.setPosition(inner.Position, compass.direction);
-	outer.setSurrounder(outer.Position);
+	compass.rotate_counterclockwise();
+	outer.set_position(inner.get_position(), compass.get_direction());
 }
 
-void Piece::setPosition(int given_x, int given_y) { //与えられたx,y座標にPieceのPositionをセットする
-	valarray<int> newPosition = { given_x, given_y };
-	Position = newPosition;
-	inner.setPosition(newPosition);
-	outer.setPosition(newPosition, compass.direction);
-}
 
-void Piece::reset() {
-	compass = INITIAL_PIECE_DIRECTION;
-	setPosition(INITIAL_PIYO_POS_CEL_X, INITIAL_PIYO_POS_CEL_Y);
-	inner.setPosition(Position);
-	outer.setPosition(Position, compass.direction);
-	inner.setSurrounder(inner.Position);
-	outer.setSurrounder(outer.Position);
-	inner.setRandomState();
-	outer.setRandomState();
+void Piece::receive_next_piece(Piece given_next_piece) {
+	compass.set_direction(given_next_piece.compass.get_direction());
+	set_position(given_next_piece.position);
+	inner.set_state(given_next_piece.inner.get_state());
+	outer.set_state(given_next_piece.outer.get_state());
 }

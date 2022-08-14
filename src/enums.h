@@ -1,4 +1,6 @@
 #pragma once
+
+
 enum State {
 	VACANT,     //ぴよが無い
 	BLUE,       //青ぴよ
@@ -11,11 +13,11 @@ enum State {
 };
 
 enum Scene {
-	TITLE,
-	INSTRUCTION,
-	GAME,
-	GAMEOVER,
-	RESULT
+	TITLE,			//タイトル画面
+	INSTRUCTION,	//操作説明画面
+	GAME,			//ゲームプレイ画面
+	GAMEOVER,		//ゲームオーバー画面
+	RESULT			//結果表示画面
 };
 
 enum Direction {
