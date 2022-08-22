@@ -36,13 +36,7 @@ void GameSession::deal_clockkeeper() {
 	float piyodropwait = 1.0 / piyo_drop_freq;
 	if (GetNowCount() >= clock_keeper + piyodropwait * 1000) {
 		clock_keeper = GetNowCount();
-		if (check_piece_landing() == true) {
-			copy_piece_to_field();
-			update_piece();
-		}
-		else {
-			piece->drop_onestep();
-		}
+		consider_drop_piece_onestep();
 	}
 }
 
@@ -54,7 +48,7 @@ void GameSession::deal_keyinput() {
 	//Zキー
 	if (is_z_key_pushed == false && keybuf[KEY_INPUT_Z] == 1) {
 		is_z_key_pushed = true;
-		piece->rotate_counterclockwise();
+		piece->consider_rotate_counterclockwise();
 	}
 	else if (is_z_key_pushed == true && keybuf[KEY_INPUT_Z] == 0) {
 		is_z_key_pushed = false;
@@ -63,7 +57,7 @@ void GameSession::deal_keyinput() {
 	//Xキー
 	if (is_x_key_pushed == false && keybuf[KEY_INPUT_X] == 1) {
 		is_x_key_pushed = true;
-		piece->rotate_forwardclockwise();
+		piece->consider_rotate_forwardclockwise();
 	}
 	else if (is_x_key_pushed == true && keybuf[KEY_INPUT_X] == 0) {
 		is_x_key_pushed = false;
@@ -86,16 +80,37 @@ void GameSession::deal_keyinput() {
 	else if (is_right_key_pushed == true && keybuf[KEY_INPUT_RIGHT] == 0) {
 		is_right_key_pushed = false;
 	}
+
+	//下矢印キー
+	if (is_down_key_pushed == false && keybuf[KEY_INPUT_DOWN] == 1) {
+		is_down_key_pushed = true;
+		consider_drop_piece_onestep();
+	}
+	else if (is_down_key_pushed == true && keybuf[KEY_INPUT_DOWN] == 0) {
+		is_down_key_pushed = false;
+	}
+}
+
+
+void GameSession::consider_drop_piece_onestep() {
+	if (check_piece_landing() == true) {
+		copy_piece_to_field();
+		field.drop_hoverings();
+		update_piece();
+	}
+	else {
+		piece->drop_onestep();
+	}
+
 }
 
 
 bool GameSession::check_piece_landing() {
-	if (piece->get_inner().get_downer_fcell().get_state() != VACANT || piece->get_outer().get_downer_fcell().get_state() != VACANT) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	if (piece->get_inner().is_downer_fcell_available() == false) return true;
+	else if (piece->get_inner().get_downer_fcell().get_state() != State::VACANT) return true;
+	else if (piece->get_outer().is_downer_fcell_available() == false) return true;
+	else if (piece->get_outer().get_downer_fcell().get_state() != State::VACANT) return true;
+	else return false;
 }
 
 

@@ -91,6 +91,35 @@ valarray<int> Pcell::get_position() {
 }
 
 
+bool Pcell::is_upper_fcell_available() {
+	return (position[Dimension::Y] > 0 && position[Dimension::Y] <= Field::FIELD_HEIGHT - 1) ? true : false;
+}
+
+
+bool Pcell::is_downer_fcell_available() {
+	return (position[Dimension::Y] >= 0 && position[Dimension::Y] < Field::FIELD_HEIGHT - 1) ? true : false;
+}
+
+
+bool Pcell::is_righter_fcell_available() {
+	return (position[Dimension::X] >= 0 && position[Dimension::X] < Field::FIELD_WIDTH - 1) ? true : false;
+}
+
+
+bool Pcell::is_lefter_fcell_available() {
+	return (position[Dimension::X] > 0 && position[Dimension::X] <= Field::FIELD_WIDTH - 1) ? true : false;
+}
+
+
+bool Pcell::is_standing_position_in_range_field() {
+	if (position[Dimension::X] < 0) return false;
+	else if (position[Dimension::X] > Field::FIELD_WIDTH - 1) return false;
+	else if (position[Dimension::Y] < 0)return false;
+	else if (position[Dimension::Y] > Field::FIELD_HEIGHT - 1) return false;
+	else return true;
+}
+
+
 Fcell& Pcell::get_upper_fcell() {
 	return master_piece.get_master_field().get_fcell(position + upward);
 }

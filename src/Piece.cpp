@@ -15,14 +15,14 @@ Piece::Piece(Field& given_master_field, enum State given_inner_state, enum State
 }
 
 
-//Piece::Piece(const Piece& original) :
-//	inner(original.inner.master_piece, original.inner.position)
-//{	//コピーコンストラクタ
-//	inner = original.inner.
-//	master_field = original.master_field;
-//	compass = original.compass;
-//	position = original.position;
-//}
+Piece::Piece(Piece& original) :
+	inner(*this, original.inner.get_position(), original.inner.get_state()),
+	outer(*this, original.outer.get_position(), original.outer.get_state()),
+	master_field(original.master_field),
+	compass(original.compass.get_direction()),
+	position(original.get_position())
+{
+}
 
 
 void Piece::set_position(valarray<int> given_position) {
@@ -34,6 +34,11 @@ void Piece::set_position(valarray<int> given_position) {
 
 Field& Piece::get_master_field() {
 	return master_field;
+}
+
+
+valarray<int> Piece::get_position() {
+	return position;
 }
 
 
@@ -63,14 +68,16 @@ void Piece::drop_onestep() { //Pieceを1段落とす
 
 
 void Piece::consider_move_right() {
-	if (inner.get_righter_fcell().get_state() == State::VACANT && outer.get_righter_fcell().get_state() == State::VACANT) {
+	if (inner.is_righter_fcell_available() == false || outer.is_righter_fcell_available() == false) return;
+	else if (inner.get_righter_fcell().get_state() == State::VACANT && outer.get_righter_fcell().get_state() == State::VACANT) {
 		move_right();
 	}
 }
 
 
 void Piece::consider_move_left() {
-	if (inner.get_lefter_fcell().get_state() == State::VACANT && outer.get_lefter_fcell().get_state() == State::VACANT) {
+	if (inner.is_lefter_fcell_available() == false || outer.is_lefter_fcell_available() == false) return;
+	else if (inner.get_lefter_fcell().get_state() == State::VACANT && outer.get_lefter_fcell().get_state() == State::VACANT) {
 		move_left();
 	}
 }
@@ -91,14 +98,22 @@ void Piece::move_left() { //Pieceを左に動かす
 
 
 void Piece::consider_rotate_forwardclockwise() {
-	//Piece i(*this);
-	//i.rotate_forwardclockwise();
-	//if(i.inner.)
+	Piece i(*this);
+	i.rotate_forwardclockwise();
+	if (i.inner.is_standing_position_in_range_field() == false || i.outer.is_standing_position_in_range_field() == false) return;
+	else if (i.inner.get_standing_fcell().get_state() == State::VACANT && i.outer.get_standing_fcell().get_state() == State::VACANT) {
+		rotate_forwardclockwise();
+	}
 }
 
 
 void Piece::consider_rotate_counterclockwise() {
-
+	Piece i(*this);
+	i.rotate_counterclockwise();
+	if (i.inner.is_standing_position_in_range_field() == false || i.outer.is_standing_position_in_range_field() == false) return;
+	else if (i.inner.get_standing_fcell().get_state() == State::VACANT && i.outer.get_standing_fcell().get_state() == State::VACANT) {
+		rotate_counterclockwise();
+	}
 }
 
 

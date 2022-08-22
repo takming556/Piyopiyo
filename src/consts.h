@@ -5,8 +5,8 @@
 using std::valarray;
 
 //定数たち
-const bool DebugFlag = true;                   //TRUEにすると「空」「外」などの表示がされる
-const bool AutoPiyoFallFlag = true;             //FALSEにするとぴよは手動でのみ落下するようになる
+const bool DebugFlag = false;                   //trueにすると「空」「外」などの表示がされる
+const bool AutoPiyoFallFlag = true;             //falseにするとぴよは手動でのみ落下するようになる
 
 const unsigned int SCREEN_RESOLUTION_X = 1024;      //画面解像度X
 const unsigned int SCREEN_RESOLUTION_Y = 768;       //画面解像度Y

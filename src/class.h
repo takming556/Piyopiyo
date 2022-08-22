@@ -46,9 +46,11 @@ private:
 public:
 	Field();
 	Fcell& get_fcell(valarray<int> given_position);
+	Fcell& get_fcell(unsigned int given_x, unsigned int given_y);
 	void draw();
-	static const unsigned int FIELD_WIDTH = 8;				//ゲームフィールドのセル幅
-	static const unsigned int FIELD_HEIGHT = 14;			//ゲームフィールドのセル高
+	void drop_hoverings();
+	static const unsigned int FIELD_WIDTH = 6;				//ゲームフィールドのセル幅
+	static const unsigned int FIELD_HEIGHT = 12;			//ゲームフィールドのセル高
 	static const unsigned int FIELD_DRAWPOS_PXL_X = 96;		//ゲームフィールドのピクセル位置X座標
 	static const unsigned int FIELD_DRAWPOS_PXL_Y = 48;		//ゲームフィールドのピクセル位置Y座標
 };
@@ -71,16 +73,15 @@ public:
 	void draw(int x, int y);
 	static const unsigned int FCELL_WIDTH = 48;		//フィールドセルのピクセル幅
 	static const unsigned int FCELL_HEIGHT = 48;	//フィールドセルのピクセル高
-	static inline const enum State INITIAL_FCELL_STATES[Field::FIELD_WIDTH][Field::FIELD_HEIGHT] = {
-					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE},
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{ VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,OUTSIDE },
-					{OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE,OUTSIDE}
-	};
+	//static inline const enum State INITIAL_FCELL_STATES[Field::FIELD_WIDTH][Field::FIELD_HEIGHT] = {
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT},
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT},
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT},
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT},
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT},
+	//	{VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT,VACANT}
+	//};
+	static inline const enum State INITIAL_FCELL_STATES[Field::FIELD_WIDTH][Field::FIELD_HEIGHT] = { VACANT };
 };
 
 
@@ -91,6 +92,7 @@ private:
 	valarray<int> position;
 public:
 	Pcell(Piece& given_master_piece, valarray<int> given_position, enum State given_state);
+
 	void set_state(enum State given_state);
 	//void set_state_randomly();
 	void set_position(int given_x, int given_y);
@@ -98,6 +100,11 @@ public:
 	void set_position(valarray<int> base_position, Direction given_direction);
 	enum State get_state();
 	valarray<int> get_position();
+	bool is_upper_fcell_available();
+	bool is_downer_fcell_available();
+	bool is_righter_fcell_available();
+	bool is_lefter_fcell_available();
+	bool is_standing_position_in_range_field();
 	Fcell& get_upper_fcell();
 	Fcell& get_downer_fcell();
 	Fcell& get_righter_fcell();
@@ -118,9 +125,10 @@ private:
 	Pcell outer;
 public:
 	Piece(Field& given_master_field, enum State given_inner_state, enum State given_outer_state);
-	//Piece(const Piece& original);
+	Piece(Piece& original);
 	void set_position(valarray<int> given_position);
 	Field& get_master_field();
+	valarray<int> get_position();
 	Pcell get_inner();
 	Pcell get_outer();
 	void draw();
@@ -135,10 +143,10 @@ public:
 	void rotate_counterclockwise();
 	void receive_next_piece(Piece given_next_piece);
 	//void set_position(int given_x, int given_y);
-	static inline const valarray<int> INITIAL_PIECE_POSITION{ 3,1 };		//Pieceの初期位置
+	static inline const valarray<int> INITIAL_PIECE_POSITION{ 2,1 };		//Pieceの初期位置
 	static const enum Direction INITIAL_PIECE_DIRECTION = Direction::UP;	//Pieceの初期方向
-	static inline const valarray<int> INITIAL_INNER_PCELL_POSITION{ 3,1 };
-	static inline const valarray<int> INITIAL_OUTER_PCELL_POSITION{ 3,0 };
+	static inline const valarray<int> INITIAL_INNER_PCELL_POSITION{ 2,1 };
+	static inline const valarray<int> INITIAL_OUTER_PCELL_POSITION{ 2,0 };
 };
 
 
@@ -168,14 +176,15 @@ private:
 	NextPiece next_piece;
 	int clock_keeper;
 	float piyo_drop_freq;
-	bool is_down_key_pushed;
-	bool is_left_key_pushed;
-	bool is_right_key_pushed;
 	bool is_z_key_pushed;
 	bool is_x_key_pushed;
+	bool is_left_key_pushed;
+	bool is_right_key_pushed;
+	bool is_down_key_pushed;
 	bool is_game_over;
 	void deal_clockkeeper();
 	void deal_keyinput();
+	void consider_drop_piece_onestep();
 	bool check_piece_landing();
 	void copy_piece_to_field();
 	void update_piece();
