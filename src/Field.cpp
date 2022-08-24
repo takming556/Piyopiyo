@@ -5,7 +5,9 @@
 #include "class.h"
 
 
-Field::Field() {
+Field::Field() :
+	vanish_combo(0)
+{
 	for (int x = 0; x < FIELD_WIDTH; x++) {
 		vector<Fcell> v;
 		for (int y = 0; y < FIELD_HEIGHT; y++) {
@@ -43,16 +45,37 @@ void Field::draw() {
 void Field::drop_hoverings() {
 	for (int y = FIELD_HEIGHT - 1; y >= 0; y--) {
 		for (int x = 0; x <= FIELD_WIDTH - 1; x++) {
-			if (get_fcell(x, y).get_state() == State::VACANT) continue;
-			int i = y;
+			if (fcell_matrix.at(x).at(y).get_state() == State::VACANT) continue;
+			int i = y + 1;
 			while (true) {
-				if (i >= FIELD_HEIGHT - 1) break;
-				else if (get_fcell(x, i).get_state() != State::VACANT) break;
+				if (i > FIELD_HEIGHT - 1) break;
+				else if (fcell_matrix.at(x).at(i).get_state() != State::VACANT) break;
 				i++;
 			}
-			enum State copied_state = get_fcell(x, y).get_state();
-			get_fcell(x, y).set_state(State::VACANT);
-			get_fcell(x, i).set_state(copied_state);
+			enum State copied_state = fcell_matrix.at(x).at(y).get_state();
+			fcell_matrix.at(x).at(y).set_state(State::VACANT);
+			fcell_matrix.at(x).at(i - 1).set_state(copied_state);
 		}
 	}
+}
+
+
+bool Field::check_vanishment() {
+	bool have_vanish_scheduled_fcell = false;
+	for (int y = 0; y < FIELD_HEIGHT; y++) {
+		for (int x = 0; x < FIELD_WIDTH; x++) {
+			unsigned int chain = 0;
+			fcell_matrix.at(x).at(y).survey_chain(chain);
+			if (chain >= VANISH_THRESHOLD) {
+				fcell_matrix.at(x).at(y).set_is_vanish_scheduled(true);
+				have_vanish_scheduled_fcell = true;
+			}
+		}
+	}
+	return have_vanish_scheduled_fcell;
+}
+
+
+void Field::execute_vanish() {
+
 }

@@ -96,6 +96,7 @@ void GameSession::consider_drop_piece_onestep() {
 	if (check_piece_landing() == true) {
 		copy_piece_to_field();
 		field.drop_hoverings();
+		if (field.check_vanishment() == true);
 		update_piece();
 	}
 	else {
@@ -126,4 +127,5 @@ void GameSession::update_piece() {
 	delete piece;
 	piece = new Piece(field, next_piece.get_inner_state(), next_piece.get_outer_state());
 	next_piece.set_randomly();
+	clock_keeper = GetNowCount();
 }

@@ -43,16 +43,20 @@ public:
 class Field {
 private:
 	vector<vector<Fcell>> fcell_matrix;
+	int vanish_combo;
 public:
 	Field();
 	Fcell& get_fcell(valarray<int> given_position);
 	Fcell& get_fcell(unsigned int given_x, unsigned int given_y);
 	void draw();
 	void drop_hoverings();
+	bool check_vanishment();
+	void execute_vanish();
 	static const unsigned int FIELD_WIDTH = 6;				//ゲームフィールドのセル幅
 	static const unsigned int FIELD_HEIGHT = 12;			//ゲームフィールドのセル高
 	static const unsigned int FIELD_DRAWPOS_PXL_X = 96;		//ゲームフィールドのピクセル位置X座標
 	static const unsigned int FIELD_DRAWPOS_PXL_Y = 48;		//ゲームフィールドのピクセル位置Y座標
+	static const unsigned int VANISH_THRESHOLD = 4;	//ぴよ消し閾値
 };
 
 
@@ -61,9 +65,12 @@ private:
 	Field& master_field;
 	enum State state;
 	valarray<int> position;
+	bool is_already_vanish_surveyed;
+	bool is_vanish_scheduled;
 public:
 	Fcell(Field& given_master_field, enum State initial_state, valarray<int> lying_position);
 	void set_state(enum State given_state);
+	void set_is_vanish_scheduled(bool given_flag);
 	//void set_position(int given_x, int given_y);
 	enum State get_state();
 	Fcell& get_upper();
@@ -71,6 +78,7 @@ public:
 	Fcell& get_righter();
 	Fcell& get_lefter();
 	void draw(int x, int y);
+	void survey_chain(unsigned int& chain_amount); //自分と同じStateのFcellがいくつつながっているかを調査する
 	static const unsigned int FCELL_WIDTH = 48;		//フィールドセルのピクセル幅
 	static const unsigned int FCELL_HEIGHT = 48;	//フィールドセルのピクセル高
 	//static inline const enum State INITIAL_FCELL_STATES[Field::FIELD_WIDTH][Field::FIELD_HEIGHT] = {
@@ -188,7 +196,6 @@ private:
 	bool check_piece_landing();
 	void copy_piece_to_field();
 	void update_piece();
-	static const unsigned int VANISH_THRESHOLD = 4;	//ぴよ消し閾値
 public:
 	GameSession();
 	void patrol();
