@@ -77,5 +77,13 @@ bool Field::check_vanishment() {
 
 
 void Field::execute_vanish() {
-
+	for (int y = 0; y < FIELD_HEIGHT; y++) {
+		for (int x = 0; x < FIELD_WIDTH; x++) {
+			Fcell& now_fcell = fcell_matrix.at(x).at(y);
+			if (now_fcell.get_is_vanish_scheduled() == true) {
+				now_fcell.set_state(State::VACANT);
+				now_fcell.set_is_vanish_scheduled(false);
+			}
+		}
+	}
 }

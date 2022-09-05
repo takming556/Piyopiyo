@@ -96,7 +96,12 @@ void GameSession::consider_drop_piece_onestep() {
 	if (check_piece_landing() == true) {
 		copy_piece_to_field();
 		field.drop_hoverings();
-		if (field.check_vanishment() == true);
+		if (field.check_vanishment() == true) {
+			do {
+				field.execute_vanish();
+				field.drop_hoverings();
+			} while (field.check_vanishment() == true);
+		}
 		update_piece();
 	}
 	else {

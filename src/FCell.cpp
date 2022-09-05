@@ -29,6 +29,11 @@ void Fcell::set_is_vanish_scheduled(bool given_flag) {
 }
 
 
+bool Fcell::get_is_vanish_scheduled() {
+	return is_vanish_scheduled;
+}
+
+
 enum State Fcell::get_state() {
 	return state;
 }

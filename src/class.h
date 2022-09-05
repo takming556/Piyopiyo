@@ -71,6 +71,7 @@ public:
 	Fcell(Field& given_master_field, enum State initial_state, valarray<int> lying_position);
 	void set_state(enum State given_state);
 	void set_is_vanish_scheduled(bool given_flag);
+	bool get_is_vanish_scheduled();
 	//void set_position(int given_x, int given_y);
 	enum State get_state();
 	Fcell& get_upper();
@@ -174,6 +175,16 @@ public:
 	static const int NEXT_PIECE_DRAWPOS_OFFSET_PXL_Y = 64;
 	static const int NEXT_PIECE_DRAWPOS_PXL_X = NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_X + NEXT_PIECE_DRAWPOS_OFFSET_PXL_X;
 	static const int NEXT_PIECE_DRAWPOS_PXL_Y = NEXT_PIECE_BACKGROUND_DRAWPOS_PXL_Y + NEXT_PIECE_DRAWPOS_OFFSET_PXL_Y;
+};
+
+
+class VanishEffect {
+private:
+	int time_elapsed_from_started_vanishing;
+public:
+	VanishEffect();
+	void draw();
+	void patrol();
 };
 
 
